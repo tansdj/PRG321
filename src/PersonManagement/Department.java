@@ -5,13 +5,15 @@
  */
 package PersonManagement;
 
+
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
  *
  * @author Tanya
  */
-public class Department {
+public class Department{
     
     private String name;
 
@@ -59,6 +61,7 @@ public class Department {
         }
         return true;
     }
+
 
     
 }

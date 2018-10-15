@@ -5,13 +5,15 @@
  */
 package PersonManagement;
 
+
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
  *
  * @author Tanya
  */
-public class Contact {
+public class Contact{
     
     private String cell;
     private String email;
@@ -74,5 +76,6 @@ public class Contact {
         }
         return true;
     }
+
 
 }
