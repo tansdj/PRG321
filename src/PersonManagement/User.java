@@ -5,11 +5,14 @@
  */
 package PersonManagement;
 
+import bc_stationary_bll.Datahandling;
+import java.util.ArrayList;
+
 /**
  *
  * @author Tanya
  */
-public class User {
+public class User implements Datahandling{
     
     private Person person;
     private String username;
@@ -55,6 +58,21 @@ public class User {
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    @Override
+    public ArrayList<User> select() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int update() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int delete() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

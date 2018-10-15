@@ -5,13 +5,15 @@
  */
 package PersonManagement;
 
+
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
  *
  * @author Tanya
  */
-public class Address {
+public class Address{
     
     private String line1;
     private String line2;
@@ -101,6 +103,8 @@ public class Address {
         }
         return true;
     }
+
+    
     
     
 

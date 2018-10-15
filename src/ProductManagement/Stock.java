@@ -5,13 +5,15 @@
  */
 package ProductManagement;
 
+import bc_stationary_bll.Datahandling;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
  *
  * @author Tanya
  */
-public class Stock {
+public class Stock implements Datahandling{
     
     private Product product;
     private int quantity;
@@ -72,6 +74,21 @@ public class Stock {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public ArrayList<Stock> select() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int update() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int delete() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
