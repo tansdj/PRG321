@@ -6,8 +6,13 @@
 package PersonManagement;
 
 import bc_stationary_bll.Datahandling;
+import bc_stationary_dll.Datahandler;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -148,17 +153,50 @@ public class Person implements Datahandling{
 
     @Override
     public ArrayList<Person> select() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<Person> person = new ArrayList<Person>();
+        Datahandler dh = new Datahandler();
+        dh.connect();
+        ResultSet rs = dh.selectQuery("SELECT * FROM `tblperson` INNER JOIN `tbladdress` ON `AddressIDFK`=`AddressIDPK`\n" +
+"INNER JOIN `tblcontact` ON `ContactIDPK` = `ContactIDFK` INNER JOIN `tblDepartment` ON `DepIDFK` = `DepartmentIDPK`");
+        try {
+            while(rs.next()){
+                person.add(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
+                        new Address(rs.getString("Line1"),rs.getString("Line2"),rs.getString("City"),rs.getString("PostalCode")),
+                        new Contact(rs.getString("Cell"),rs.getString("Email")),
+                        new Department(rs.getString("DepName")),rs.getString("Campus")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return person;
     }
 
     @Override
     public int update() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String[][] personValues = new String[][]{{"STRING","Name",this.name},{"STRING","Surname",this.surname},
+            {"INT","DepIDFK","(SELECT `DepartmentIDPK` FROM `tbldepartment` WHERE `DepName` = '"+this.department.getName()+"')"},{"STRING","Campus",this.campus}};
+        String[][] addressValues = new String[][]{{"STRING","Line1",this.address.getLine1()},{"STRING","Line2",this.address.getLine2()},
+                                                  {"STRING","City",this.address.getCity()},{"STRING","PostalCode",this.address.getPostalCode()}};
+        String[][] contactValues = new String[][]{{"STRING","Cell",this.contact.getCell()},{"STRING","Email",this.contact.getEmail()}};
+        
+        Datahandler dh = new Datahandler();
+        dh.connect();
+        int p = dh.performUpdate("tblperson", personValues, "`IDNumber` = '"+this.id+"'");
+        int a = dh.performUpdate("tblAddress", addressValues, "`AddressIDPK` = (SELECT `AddressIDFK` FROM `tblPerson` WHERE `IDNumber` = '"+this.id+"')");
+        int c = dh.performUpdate("tblContact", contactValues, "`ContactIDPK` = (SELECT `ContactIDFK` FROM `tblPerson` WHERE `IDNumber` = '"+this.id+"')");
+        
+        if((p>0)&&(a>0)&&(c>0)){
+            return 1;
+        }else{
+            return 0;
+        }
     }
 
     @Override
     public int delete() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       Datahandler dh = new Datahandler();
+        dh.connect();
+        return dh.performDelete("tblPerson", "`IDNumber` = '"+this.id+"'");
     }
 
 }
