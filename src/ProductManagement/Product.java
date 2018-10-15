@@ -5,14 +5,16 @@
  */
 package ProductManagement;
 
+import bc_stationary_bll.Datahandling;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
  *
  * @author Tanya
  */
-public class Product {
+public class Product implements Datahandling{
     
     private String name;
     private String description;
@@ -157,6 +159,21 @@ public class Product {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public ArrayList<Product> select() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int update() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int delete() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

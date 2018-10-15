@@ -6,13 +6,15 @@
 package ProductManagement;
 
 import PersonManagement.User;
+import bc_stationary_bll.Datahandling;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
  *
  * @author Tanya
  */
-public class UserRequest {
+public class UserRequest implements Datahandling{
     
     private User user;
     private Product product;
@@ -101,6 +103,21 @@ public class UserRequest {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public ArrayList<UserRequest> select() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int update() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int delete() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

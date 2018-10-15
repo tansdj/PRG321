@@ -5,13 +5,15 @@
  */
 package PersonManagement;
 
+import bc_stationary_bll.Datahandling;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
  *
  * @author Tanya
  */
-public class SecurityQuestions {
+public class SecurityQuestions implements Datahandling{
     
     private String question;
 
@@ -58,6 +60,21 @@ public class SecurityQuestions {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public ArrayList<SecurityQuestions> select() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int update() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int delete() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
