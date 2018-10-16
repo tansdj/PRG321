@@ -44,7 +44,7 @@ public class Stock implements Datahandling{
 
     @Override
     public String toString() {
-        return "Stock{" + "product=" + product + ", quantity=" + quantity + '}';
+        return product.toString() +"\t"+ quantity;
     }
 
     @Override

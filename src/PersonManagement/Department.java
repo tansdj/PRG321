@@ -5,7 +5,6 @@
  */
 package PersonManagement;
 
-
 import bc_stationary_bll.Datahandling;
 import bc_stationary_dll.Datahandler;
 import bc_stationary_dll.TableSpecifiers;
@@ -41,7 +40,7 @@ public class Department implements Datahandling{
 
     @Override
     public String toString() {
-        return "Department{" + "name=" + name + '}';
+        return name;
     }
 
     @Override
