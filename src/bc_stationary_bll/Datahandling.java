@@ -15,4 +15,5 @@ public interface Datahandling {
     ArrayList<?> select();
     int update();
     int delete();
+    int insert();
 }

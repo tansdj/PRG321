@@ -6,7 +6,14 @@
 package PersonManagement;
 
 import bc_stationary_bll.Datahandling;
+import bc_stationary_dll.Datahandler;
+import bc_stationary_dll.TableSpecifiers;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,6 +26,17 @@ public class User implements Datahandling{
     private String password;
     private String accessLevel;
     private String status;
+
+    public User(Person person, String username, String password, String accessLevel, String status) {
+        this.person = person;
+        this.username = username;
+        this.password = password;
+        this.accessLevel = accessLevel;
+        this.status = status;
+    }
+
+    public User() {
+    }
 
     public String getStatus() {
         return status;
@@ -61,18 +79,121 @@ public class User implements Datahandling{
     }
 
     @Override
+    public String toString() {
+        return "User{" + "person=" + person + ", username=" + username + ", password=" + password + ", accessLevel=" + accessLevel + ", status=" + status + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 97 * hash + Objects.hashCode(this.person);
+        hash = 97 * hash + Objects.hashCode(this.username);
+        hash = 97 * hash + Objects.hashCode(this.password);
+        hash = 97 * hash + Objects.hashCode(this.accessLevel);
+        hash = 97 * hash + Objects.hashCode(this.status);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final User other = (User) obj;
+        if (!Objects.equals(this.username, other.username)) {
+            return false;
+        }
+        if (!Objects.equals(this.password, other.password)) {
+            return false;
+        }
+        if (!Objects.equals(this.accessLevel, other.accessLevel)) {
+            return false;
+        }
+        if (!Objects.equals(this.status, other.status)) {
+            return false;
+        }
+        if (!Objects.equals(this.person, other.person)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public ArrayList<User> select() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<User> users = new ArrayList<User>();
+        Datahandler dh = new Datahandler();
+        try {
+            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblUser` INNER JOIN `tblPerson` ON `PersonIDFK` = `PersonIDPK`");
+            while(rs.next()){
+                users.add(new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
+                            new Address(), new Contact(),
+                            new Department(rs.getString("DepName")),rs.getString("Campus")),
+                            rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return users;
+    }
+    
+    public User selectSpecUser(){
+        User user = new User();
+        Datahandler dh = new Datahandler();
+        try {
+            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblUser` INNER JOIN `tblPerson` ON `PersonIDFK` = `PersonIDPK` WHERE `Username = '"+this.username+"'");
+            while(rs.next()){
+                user = (new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
+                            new Address(), new Contact(),
+                            new Department(rs.getString("DepName")),rs.getString("Campus")),
+                            rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return user;
     }
 
     @Override
     public int update() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       String[][] userVals = new String[][]{{"STRING","Password",this.getPassword()},{"STRING","AccessLevel",this.getAccessLevel()},
+                                            {"STRING","Status",this.getStatus()}};
+       Datahandler dh = new Datahandler();
+        try {
+            return dh.performUpdate(TableSpecifiers.USER.getTable(), userVals, "`Username` = '"+this.getUsername()+"'");
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
     @Override
     public int delete() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       Datahandler dh = new Datahandler();
+        try {
+            return dh.performDelete(TableSpecifiers.USER.getTable(),"`Username` = '"+this.getUsername()+"'");
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+
+    @Override
+    public int insert() {
+        String[][] userVals = new String[][]{{"STRING","Username",this.getUsername()},{"STRING","Password",this.getPassword()},
+                                    {"STRING","AccessLevel",this.getAccessLevel()},{"STRING","Status",this.getStatus()}};
+        Datahandler dh = new Datahandler();
+        try {
+            dh.performInsert(TableSpecifiers.USER.getTable(), userVals);
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
 }
