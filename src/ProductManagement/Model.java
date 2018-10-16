@@ -6,8 +6,14 @@
 package ProductManagement;
 
 import bc_stationary_bll.Datahandling;
+import bc_stationary_dll.Datahandler;
+import bc_stationary_dll.TableSpecifiers;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -64,7 +70,17 @@ public class Model implements Datahandling{
 
     @Override
     public ArrayList<Model> select() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<Model> models = new ArrayList<Model>();
+        Datahandler dh = new Datahandler();
+        try {
+            ResultSet rs = dh.selectQuery(TableSpecifiers.MODEL.getTable());
+            while(rs.next()){
+                models.add(new Model(rs.getString("ModDescription")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return models;
     }
 
     @Override
@@ -74,12 +90,25 @@ public class Model implements Datahandling{
 
     @Override
     public int delete() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Datahandler dh = new Datahandler();
+        try {
+            return dh.performDelete(TableSpecifiers.MODEL.getTable(), "`ModDescription` = '"+this.getDescription()+"'");
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
     @Override
     public int insert() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String[][] modVals = new String[][]{{"STRING","ModDescription",this.getDescription()}};
+        Datahandler dh = new Datahandler();
+        try {
+            return dh.performInsert(TableSpecifiers.MODEL.getTable(), modVals);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
 }

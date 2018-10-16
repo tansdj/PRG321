@@ -6,8 +6,14 @@
 package ProductManagement;
 
 import bc_stationary_bll.Datahandling;
+import bc_stationary_dll.Datahandler;
+import bc_stationary_dll.TableSpecifiers;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -64,7 +70,17 @@ public class Category implements Datahandling{
 
     @Override
     public ArrayList<Category> select() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<Category> cats = new ArrayList<Category>();
+        Datahandler dh =  new Datahandler();
+        try {
+            ResultSet rs = dh.selectQuery(TableSpecifiers.CATEGORY.getTable());
+            while(rs.next()){
+                cats.add(new Category(rs.getString("CatDescription")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cats;
     }
 
     @Override
@@ -74,12 +90,25 @@ public class Category implements Datahandling{
 
     @Override
     public int delete() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Datahandler dh = new Datahandler();
+        try {
+            return dh.performDelete(TableSpecifiers.CATEGORY.getTable(), "`CatDescription` = '"+this.getDescription()+"'");
+        } catch (SQLException ex) {
+            Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
     @Override
     public int insert() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String[][] depVals = new String[][]{{"STRING","CatDescription",this.getDescription()}};
+        Datahandler dh = new Datahandler();
+        try {
+            return dh.performInsert(TableSpecifiers.CATEGORY.getTable(), depVals);
+        } catch (SQLException ex) {
+            Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
 }

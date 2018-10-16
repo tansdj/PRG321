@@ -5,10 +5,17 @@
  */
 package ProductManagement;
 
+import PersonManagement.Person;
 import PersonManagement.User;
 import bc_stationary_bll.Datahandling;
+import bc_stationary_dll.Datahandler;
+import bc_stationary_dll.TableSpecifiers;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -107,22 +114,58 @@ public class UserRequest implements Datahandling{
 //gdhdh
     @Override
     public ArrayList<UserRequest> select() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
+        Datahandler dh = new Datahandler();
+        ResultSet rs;
+        try {
+            rs = dh.selectQuerySpec("SELECT * FROM `tbluserrequest` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDPK`");
+            while(rs.next()){
+            uReq.add(new UserRequest(new User(new Person(),rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")),new Product(rs.getString("Name"),rs.getString("Description"),new Category(),rs.getString("Status"),
+                        new Model(),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity"),rs.getInt("Priority")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return uReq;
     }
 
     @Override
     public int update() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String[][] reqVals = new String[][]{{"INT","Quantity",Integer.toString(this.quantity)},{"INT","Priority",Integer.toString(this.priorityLevel)}};
+        Datahandler dh = new Datahandler();
+        try {
+            return dh.performUpdate(TableSpecifiers.REQUEST.getTable(), reqVals, "`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.user.getUsername()+"') "
+                    + "AND `ProductIDFK` = (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')");
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
     @Override
     public int delete() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Datahandler dh = new Datahandler();
+        try {
+            return dh.performDelete(TableSpecifiers.REQUEST.getTable(), "`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.user.getUsername()+"') "
+                    + "AND `ProductIDFK` = (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')");
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
     @Override
     public int insert() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String[][] reqVals = new String[][]{{"INT","UserIDFK","(SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.user.getUsername()+"')"},
+            {"INT","ProductIDFK","(SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')"},
+            {"INT","Quantity",Integer.toString(this.quantity)},{"INT","Priority",Integer.toString(this.priorityLevel)}};
+        Datahandler dh = new Datahandler();
+        try {
+            return dh.performInsert(TableSpecifiers.REQUEST.getTable(), reqVals);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
 }

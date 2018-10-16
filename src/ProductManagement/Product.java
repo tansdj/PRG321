@@ -6,9 +6,15 @@
 package ProductManagement;
 
 import bc_stationary_bll.Datahandling;
+import bc_stationary_dll.Datahandler;
+import bc_stationary_dll.TableSpecifiers;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -163,22 +169,72 @@ public class Product implements Datahandling{
 
     @Override
     public ArrayList<Product> select() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<Product> prods = new ArrayList<Product>();
+        Datahandler dh = new Datahandler();
+        ResultSet rs;
+        try {
+            rs = dh.selectQuery("SELECT * FROM `tblproduct` INNER JOIN `tblmodel` ON `ModelIDFK` = `ModelIDPK` INNER JOIN `tblcategory` ON `CategoryIDFK` = `CategoryIDPK`");
+            while(rs.next()){
+                prods.add(new Product(rs.getString("Name"),rs.getString("Description"),new Category(rs.getString("CatDescription")),rs.getString("Status"),
+                        new Model(rs.getString("ModDescription")),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return prods;
     }
 
+    public Product selectSpecProduct(){
+        Product prod = new Product();
+        Datahandler dh = new Datahandler();
+        ResultSet rs;
+        try {
+            rs = dh.selectQuery("SELECT * FROM `tblproduct` INNER JOIN `tblmodel` ON `ModelIDFK` = `ModelIDPK` INNER JOIN `tblcategory` ON `CategoryIDFK` = `CategoryIDPK`");
+            while(rs.next()){
+                prod = (new Product(rs.getString("Name"),rs.getString("Description"),new Category(rs.getString("CatDescription")),rs.getString("Status"),
+                        new Model(rs.getString("ModDescription")),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return prod;
+    }
+    
     @Override
     public int update() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String[][] prodVals = new String[][]{{"STRING","Description",this.description},{"INT","CategoryIDFK"," (SELECT `CategoryIDPK` FROM `tblcategory` WHERE `CatDescription` = '"+this.category.getDescription()+"')"},
+                                            {"STRING","Status",this.status},{"INT","ModelIDFK"," (SELECT `ModelIDPK` FROM `tblmodel` WHERE `ModDescription` = '"+this.model.getDescription()+"')"}};
+        Datahandler dh = new Datahandler();
+        try {
+           return dh.performUpdate(TableSpecifiers.PRODUCT.getTable(), prodVals, "`Name` = '"+this.name+"'");
+        } catch (SQLException ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
     @Override
     public int delete() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Datahandler dh = new Datahandler();
+        try {
+            return dh.performDelete(TableSpecifiers.PRODUCT.getTable(), "`Name` = '"+this.name+"'");
+        } catch (SQLException ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
     @Override
     public int insert() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String[][] prodVals = new String[][]{{"STRING","Name",this.name},{"STRING","Description",this.description},{"INT","CategoryIDFK"," (SELECT `CategoryIDPK` FROM `tblcategory` WHERE `CatDescription` = '"+this.category.getDescription()+"')"},
+                                            {"STRING","Status",this.status},{"INT","ModelIDFK"," (SELECT `ModelIDPK` FROM `tblmodel` WHERE `ModDescription` = '"+this.model.getDescription()+"')"}};
+        Datahandler dh = new Datahandler();
+        try {
+            return dh.performInsert(TableSpecifiers.PRODUCT.getTable(), prodVals);
+        } catch (SQLException ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
 }

@@ -92,14 +92,8 @@ public class Department implements Datahandling{
 
     @Override
     public int update() {
-        String[][] colValues = new String[][]{{"String","DepName",this.getName()}};
-        Datahandler dh = new Datahandler();
-        try {
-            return dh.performInsert(TableSpecifiers.DEPARTMENT.getTable(), colValues);
-        } catch (SQLException ex) {
-            Logger.getLogger(Department.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return -1;
+        return 0;
+        
     }
 
     @Override
