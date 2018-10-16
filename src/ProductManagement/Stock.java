@@ -6,8 +6,14 @@
 package ProductManagement;
 
 import bc_stationary_bll.Datahandling;
+import bc_stationary_dll.Datahandler;
+import bc_stationary_dll.TableSpecifiers;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -78,22 +84,68 @@ public class Stock implements Datahandling{
 
     @Override
     public ArrayList<Stock> select() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<Stock> stock = new ArrayList<Stock>();
+        Datahandler dh = new Datahandler();
+        try {
+            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblock` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDPK`");
+            while(rs.next()){
+                stock.add(new Stock(new Product(rs.getString("Name"),rs.getString("Description"),new Category(),rs.getString("Status"),
+                        new Model(),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return stock;
+    }
+    
+    public Stock selectSpecStock(){
+        Stock stock = new Stock();
+        Datahandler dh = new Datahandler();
+        try {
+            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblock` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDPK` WHERE `Name` = '"+this.product.getName()+"'");
+            while(rs.next()){
+                stock = (new Stock(new Product(rs.getString("Name"),rs.getString("Description"),new Category(),rs.getString("Status"),
+                        new Model(),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return stock;
     }
 
     @Override
     public int update() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       String[][] stock = new String[][]{{"INT","Quantity",Integer.toString(this.quantity)}};
+       Datahandler dh = new Datahandler();
+        try {
+            return dh.performUpdate(TableSpecifiers.STOCK.getTable(), stock, "`ProductIDFK` = (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')");
+        } catch (SQLException ex) {
+            Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
     @Override
     public int delete() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Datahandler dh = new Datahandler();
+        try {
+            return dh.performDelete(TableSpecifiers.STOCK.getTable(), "`ProductIDFK` = (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')");
+        } catch (SQLException ex) {
+            Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
     @Override
     public int insert() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String[][] stock = new String[][]{{"INT","ProductIDFK"," (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')"},{"INT","Quantity",Integer.toString(this.quantity)}};
+       Datahandler dh = new Datahandler();
+        try {
+            return dh.performInsert(TableSpecifiers.STOCK.getTable(), stock);
+        } catch (SQLException ex) {
+            Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
 }
