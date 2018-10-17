@@ -203,7 +203,7 @@ public class User implements Datahandling{
         users = select();
         for(User user: users)
         {
-            if(user.username.equals(this.username)&&(user.password.equals(this.password))&&(user.accessLevel.equals(this.accessLevel)))
+            if(user.username.equals(this.username)&&(user.password.equals(this.password)))
             {
                if(!user.status.toLowerCase().equals("pending")||(!user.status.toLowerCase().equals("disabled")))
                {
