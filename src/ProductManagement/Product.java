@@ -29,9 +29,9 @@ public class Product implements Datahandling{
     private Model model;
     private double costPrice;
     private double salesPrice;
-    private Date entryDate;
+    private java.util.Date entryDate;
 
-    public Product(String name, String description, Category category, String status, Model model, double costPrice, double salesPrice, Date entryDate) {
+    public Product(String name, String description, Category category, String status, Model model, double costPrice, double salesPrice, java.util.Date entryDate) {
         this.name = name;
         this.description = description;
         this.category = category;
@@ -45,7 +45,7 @@ public class Product implements Datahandling{
     public Product() {
     }
 
-    public Date getEntryDate() {
+    public java.util.Date getEntryDate() {
         return entryDate;
     }
 
@@ -173,7 +173,7 @@ public class Product implements Datahandling{
         Datahandler dh = new Datahandler();
         ResultSet rs;
         try {
-            rs = dh.selectQuery("SELECT * FROM `tblproduct` INNER JOIN `tblmodel` ON `ModelIDFK` = `ModelIDPK` INNER JOIN `tblcategory` ON `CategoryIDFK` = `CategoryIDPK`");
+            rs = dh.selectQuerySpec("SELECT * FROM `tblproduct` INNER JOIN `tblmodel` ON `ModelIDFK` = `ModelIDPK` INNER JOIN `tblcategory` ON `CategoryIDFK` = `CategoryIDPK`");
             while(rs.next()){
                 prods.add(new Product(rs.getString("Name"),rs.getString("Description"),new Category(rs.getString("CatDescription")),rs.getString("Status"),
                         new Model(rs.getString("ModDescription")),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")));
@@ -189,7 +189,7 @@ public class Product implements Datahandling{
         Datahandler dh = new Datahandler();
         ResultSet rs;
         try {
-            rs = dh.selectQuery("SELECT * FROM `tblproduct` INNER JOIN `tblmodel` ON `ModelIDFK` = `ModelIDPK` INNER JOIN `tblcategory` ON `CategoryIDFK` = `CategoryIDPK`");
+            rs = dh.selectQuerySpec("SELECT * FROM `tblproduct` INNER JOIN `tblmodel` ON `ModelIDFK` = `ModelIDPK` INNER JOIN `tblcategory` ON `CategoryIDFK` = `CategoryIDPK`");
             while(rs.next()){
                 prod = (new Product(rs.getString("Name"),rs.getString("Description"),new Category(rs.getString("CatDescription")),rs.getString("Status"),
                         new Model(rs.getString("ModDescription")),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")));
@@ -203,7 +203,8 @@ public class Product implements Datahandling{
     @Override
     public int update() {
         String[][] prodVals = new String[][]{{"STRING","Description",this.description},{"INT","CategoryIDFK"," (SELECT `CategoryIDPK` FROM `tblcategory` WHERE `CatDescription` = '"+this.category.getDescription()+"')"},
-                                            {"STRING","Status",this.status},{"INT","ModelIDFK"," (SELECT `ModelIDPK` FROM `tblmodel` WHERE `ModDescription` = '"+this.model.getDescription()+"')"}};
+                                            {"STRING","Status",this.status},{"INT","ModelIDFK"," (SELECT `ModelIDPK` FROM `tblmodel` WHERE `ModDescription` = '"+this.model.getDescription()+"')"},
+                                            {"DOUBLE","CostPrice",Double.toString(this.costPrice)},{"DOUBLE","SalesPrice",Double.toString(this.salesPrice)},{"DATE","EntryDate",this.entryDate.toString()}};
         Datahandler dh = new Datahandler();
         try {
            return dh.performUpdate(TableSpecifiers.PRODUCT.getTable(), prodVals, "`Name` = '"+this.name+"'");
@@ -227,7 +228,8 @@ public class Product implements Datahandling{
     @Override
     public int insert() {
         String[][] prodVals = new String[][]{{"STRING","Name",this.name},{"STRING","Description",this.description},{"INT","CategoryIDFK"," (SELECT `CategoryIDPK` FROM `tblcategory` WHERE `CatDescription` = '"+this.category.getDescription()+"')"},
-                                            {"STRING","Status",this.status},{"INT","ModelIDFK"," (SELECT `ModelIDPK` FROM `tblmodel` WHERE `ModDescription` = '"+this.model.getDescription()+"')"}};
+                                            {"STRING","Status",this.status},{"INT","ModelIDFK"," (SELECT `ModelIDPK` FROM `tblmodel` WHERE `ModDescription` = '"+this.model.getDescription()+"')"},
+                                            {"DOUBLE","CostPrice",Double.toString(this.costPrice)},{"DOUBLE","SalesPrice",Double.toString(this.salesPrice)},{"DATE","EntryDate",this.entryDate.toString()}};
         Datahandler dh = new Datahandler();
         try {
             return dh.performInsert(TableSpecifiers.PRODUCT.getTable(), prodVals);
