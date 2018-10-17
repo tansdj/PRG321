@@ -111,7 +111,7 @@ public class Product implements Datahandling{
 
     @Override
     public String toString() {
-        return "Product{" + "name=" + name + ", description=" + description + ", category=" + category + ", status=" + status + ", model=" + model + ", costPrice=" + costPrice + ", salesPrice=" + salesPrice + ", entryDate=" + entryDate + '}';
+        return name; 
     }
 
     @Override

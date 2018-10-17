@@ -40,7 +40,7 @@ public class SecurityQuestions implements Datahandling{
 
     @Override
     public String toString() {
-        return "SecurityQuestions{" + "question=" + question + '}';
+        return question;
     }
 
     @Override
