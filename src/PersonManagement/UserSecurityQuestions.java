@@ -134,8 +134,8 @@ public class UserSecurityQuestions implements Datahandling{
         String[][] qVals = new String[][]{{"STRING","Answer",this.getAnswer()}};
         Datahandler dh = new Datahandler();
         try {
-            return dh.performUpdate(TableSpecifiers.USER_QUESTIONS.getTable(), qVals,"`UserIDFK` = (SELECT `UserIDPK FROM `tbluser` WHERE `Username` = '"+this.getUser().getUsername()+"') "
-                                                                + "AND `QuestionIDFK` = (SELECT `QuestionIDPK FROM `tblsecurityquestions` WHERE `Question` = '"+this.getQuestion().getQuestion()+"')");
+            return dh.performUpdate(TableSpecifiers.USER_QUESTIONS.getTable(), qVals,"(`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.getUser().getUsername()+"')) "
+                                                                + "AND (`QuestionIDFK` = (SELECT `QuestionIDPK` FROM `tblsecurityquestions` WHERE `Question` = '"+this.getQuestion().getQuestion()+"'))");
         } catch (SQLException ex) {
             Logger.getLogger(UserSecurityQuestions.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -146,8 +146,8 @@ public class UserSecurityQuestions implements Datahandling{
     public int delete() {
         Datahandler dh = new Datahandler();
         try {
-            dh.performDelete(TableSpecifiers.USER_QUESTIONS.getTable(), "`UserIDFK` = (SELECT `UserIDPK FROM `tbluser` WHERE `Username` = '"+this.getUser().getUsername()+"') "
-                    + "AND `QuestionIDFK` = (SELECT `QuestionIDPK FROM `tblsecurityquestions` WHERE `Question` = '"+this.getQuestion().getQuestion()+"')");
+            return dh.performDelete(TableSpecifiers.USER_QUESTIONS.getTable(), "`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.getUser().getUsername()+"') "
+                    + "AND `QuestionIDFK` = (SELECT `QuestionIDPK` FROM `tblsecurityquestions` WHERE `Question` = '"+this.getQuestion().getQuestion()+"')");
         } catch (SQLException ex) {
             Logger.getLogger(UserSecurityQuestions.class.getName()).log(Level.SEVERE, null, ex);
         }

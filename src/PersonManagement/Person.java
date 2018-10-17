@@ -157,7 +157,7 @@ public class Person implements Datahandling{
         ArrayList<Person> person = new ArrayList<Person>();
         try {
             Datahandler dh = new Datahandler();
-            ResultSet rs = dh.selectQuery("SELECT * FROM `tblperson` INNER JOIN `tbladdress` ON `AddressIDFK`=`AddressIDPK`\n" +
+            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblperson` INNER JOIN `tbladdress` ON `AddressIDFK`=`AddressIDPK`\n" +
                     "INNER JOIN `tblcontact` ON `ContactIDPK` = `ContactIDFK` INNER JOIN `tblDepartment` ON `DepIDFK` = `DepartmentIDPK`");
             try {
                 while(rs.next()){
@@ -180,7 +180,7 @@ public class Person implements Datahandling{
         Person person = new Person();
         try {
             Datahandler dh = new Datahandler();
-            ResultSet rs = dh.selectQuery("SELECT * FROM `tblperson` INNER JOIN `tbladdress` ON `AddressIDFK`=`AddressIDPK`\n" +
+            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblperson` INNER JOIN `tbladdress` ON `AddressIDFK`=`AddressIDPK`\n" +
                     "INNER JOIN `tblcontact` ON `ContactIDPK` = `ContactIDFK` INNER JOIN `tblDepartment` ON `DepIDFK` = `DepartmentIDPK` WHERE `IDNumber` = '"+this.id+"'");
             try {
                 while(rs.next()){
@@ -238,16 +238,21 @@ public class Person implements Datahandling{
     @Override
     public int insert() {
         try {
-            String[][] personValues = new String[][]{{"STRING","IDNumber",this.id},{"STRING","Name",this.name},{"STRING","Surname",this.surname},
-                {"INT","DepIDFK","(SELECT `DepartmentIDPK` FROM `tbldepartment` WHERE `DepName` = '"+this.department.getName()+"')"},{"STRING","Campus",this.campus}};
+            Datahandler dh = new Datahandler();
+            
             String[][] addressValues = new String[][]{{"STRING","Line1",this.address.getLine1()},{"STRING","Line2",this.address.getLine2()},
                 {"STRING","City",this.address.getCity()},{"STRING","PostalCode",this.address.getPostalCode()}};
-            String[][] contactValues = new String[][]{{"STRING","Cell",this.contact.getCell()},{"STRING","Email",this.contact.getEmail()}};
-            
-            Datahandler dh = new Datahandler();
-            int p = dh.performInsert(TableSpecifiers.PERSON.getTable(), personValues);
             int a = dh.performInsert(TableSpecifiers.ADDRESS.getTable(), addressValues);
+            String[][] contactValues = new String[][]{{"STRING","Cell",this.contact.getCell()},{"STRING","Email",this.contact.getEmail()}};
             int c = dh.performInsert(TableSpecifiers.CONTACT.getTable(), contactValues);
+            String[][] personValues = new String[][]{{"STRING","IDNumber",this.id},{"STRING","Name",this.name},{"STRING","Surname",this.surname},
+                {"INT","DepIDFK","(SELECT `DepartmentIDPK` FROM `tbldepartment` WHERE `DepName` = '"+this.department.getName()+"')"},
+                {"INT","AddressIDFK","(SELECT `AddressIDPK` FROM `tblAddress` ORDER BY `AddressIDPK` DESC LIMIT 1)"},{"INT","ContactIDFK","(SELECT `ContactIDPK` FROM `tblContact` ORDER BY `ContactIDPK` DESC LIMIT 1)"},
+                {"STRING","Campus",this.campus}};
+            
+            int p = dh.performInsert(TableSpecifiers.PERSON.getTable(), personValues);
+            
+            
             
             if((p>0)&&(a>0)&&(c>0)){
                 return 1;

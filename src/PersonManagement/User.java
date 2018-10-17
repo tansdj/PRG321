@@ -133,7 +133,7 @@ public class User implements Datahandling{
             while(rs.next()){
                 users.add(new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
                             new Address(), new Contact(),
-                            new Department(rs.getString("DepName")),rs.getString("Campus")),
+                            new Department(),rs.getString("Campus")),
                             rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")));
             }
         } catch (SQLException ex) {
@@ -146,11 +146,11 @@ public class User implements Datahandling{
         User user = new User();
         Datahandler dh = new Datahandler();
         try {
-            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblUser` INNER JOIN `tblPerson` ON `PersonIDFK` = `PersonIDPK` WHERE `Username = '"+this.username+"'");
+            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblUser` INNER JOIN `tblPerson` ON `PersonIDFK` = `PersonIDPK` WHERE `Username` = '"+this.username+"'");
             while(rs.next()){
                 user = (new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
                             new Address(), new Contact(),
-                            new Department(rs.getString("DepName")),rs.getString("Campus")),
+                            new Department(),rs.getString("Campus")),
                             rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")));
             }
         } catch (SQLException ex) {
@@ -185,11 +185,11 @@ public class User implements Datahandling{
 
     @Override
     public int insert() {
-        String[][] userVals = new String[][]{{"STRING","Username",this.getUsername()},{"STRING","Password",this.getPassword()},
+        String[][] userVals = new String[][]{{"INT","PersonIDFK","(SELECT `PersonIDPK` FROM `tblperson` WHERE `IDNumber` = '"+this.person.getId()+"')"},{"STRING","Username",this.getUsername()},{"STRING","Password",this.getPassword()},
                                     {"STRING","AccessLevel",this.getAccessLevel()},{"STRING","Status",this.getStatus()}};
         Datahandler dh = new Datahandler();
         try {
-            dh.performInsert(TableSpecifiers.USER.getTable(), userVals);
+            return dh.performInsert(TableSpecifiers.USER.getTable(), userVals);
         } catch (SQLException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
