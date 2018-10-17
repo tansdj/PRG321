@@ -80,7 +80,7 @@ public class User implements Datahandling{
 
     @Override
     public String toString() {
-        return "User{" + "person=" + person + ", username=" + username + ", password=" + password + ", accessLevel=" + accessLevel + ", status=" + status + '}';
+        return person.toString();
     }
 
     @Override
@@ -194,6 +194,41 @@ public class User implements Datahandling{
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
         return -1;
+    }
+    
+    public boolean testLogin()
+    {
+        boolean accessAllowed = false;
+        ArrayList<User> users = new ArrayList<User>();
+        users = select();
+        for(User user: users)
+        {
+            if(user.username.equals(this.username)&&(user.password.equals(this.password))&&(user.accessLevel.equals(this.accessLevel)))
+            {
+               if(!user.status.toLowerCase().equals("pending")||(!user.status.toLowerCase().equals("disabled")))
+               {
+                   accessAllowed = true;
+               }
+            }
+        }
+        
+        return accessAllowed;
+    }
+    
+    public boolean testForExistingUser() // Check to see if username and password is unique
+    {
+        boolean userExists = false;
+        ArrayList<User> users = new ArrayList<User>();
+        users = select();
+        for(User user: users)
+        {
+            if(user.username.equals(this.username)||(user.password.equals(this.password)))
+            {
+               userExists = true;
+            }
+        }
+        
+        return userExists;
     }
 
 }

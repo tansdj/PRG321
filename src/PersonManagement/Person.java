@@ -100,7 +100,7 @@ public class Person implements Datahandling{
 
     @Override
     public String toString() {
-        return "Person{" + "name=" + name + ", surname=" + surname + ", id=" + id + ", address=" + address + ", contact=" + contact + ", department=" + department + ", campus=" + campus + '}';
+        return name+" "+surname;
     }
 
     @Override
