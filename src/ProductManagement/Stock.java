@@ -87,7 +87,7 @@ public class Stock implements Datahandling{
         ArrayList<Stock> stock = new ArrayList<Stock>();
         Datahandler dh = new Datahandler();
         try {
-            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblock` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDPK`");
+            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblstock` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDPK`");
             while(rs.next()){
                 stock.add(new Stock(new Product(rs.getString("Name"),rs.getString("Description"),new Category(),rs.getString("Status"),
                         new Model(),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity")));
@@ -102,7 +102,7 @@ public class Stock implements Datahandling{
         Stock stock = new Stock();
         Datahandler dh = new Datahandler();
         try {
-            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblock` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDPK` WHERE `Name` = '"+this.product.getName()+"'");
+            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblstock` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDPK` WHERE `Name` = '"+this.product.getName()+"'");
             while(rs.next()){
                 stock = (new Stock(new Product(rs.getString("Name"),rs.getString("Description"),new Category(),rs.getString("Status"),
                         new Model(),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity")));
