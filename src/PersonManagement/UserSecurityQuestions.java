@@ -113,14 +113,14 @@ public class UserSecurityQuestions implements Datahandling{
         return questions;
     }
     
-    public ArrayList<UserSecurityQuestions> selectSpecUserQuestions(){
-        ArrayList<UserSecurityQuestions> questions = new ArrayList<UserSecurityQuestions>();
+    public UserSecurityQuestions selectSpecUserQuestions(){
+        UserSecurityQuestions questions = new UserSecurityQuestions();
         Datahandler dh = new Datahandler();
         try {
             ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblusersecurityquestions` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` "
                     + "                        INNER JOIN `tblsecurityquestions` ON `QuestionIDFK` = `QuestionIDPK` WHERE `Username` = '"+this.getUser().getUsername()+"'");
             while(rs.next()){
-                questions.add(new UserSecurityQuestions(new User(new Person(),rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")),
+                questions = (new UserSecurityQuestions(new User(new Person(),rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")),
                               new SecurityQuestions(rs.getString("Question")),rs.getString("Answer")));
             }
         } catch (SQLException ex) {

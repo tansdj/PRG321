@@ -27,6 +27,11 @@ public class User implements Datahandling{
     private String accessLevel;
     private String status;
 
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+    
     public User(Person person, String username, String password, String accessLevel, String status) {
         this.person = person;
         this.username = username;
@@ -130,6 +135,23 @@ public class User implements Datahandling{
         Datahandler dh = new Datahandler();
         try {
             ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblUser` INNER JOIN `tblPerson` ON `PersonIDFK` = `PersonIDPK`");
+            while(rs.next()){
+                users.add(new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
+                            new Address(), new Contact(),
+                            new Department(),rs.getString("Campus")),
+                            rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return users;
+    }
+    
+    public ArrayList<User> selectPending(){
+        ArrayList<User> users = new ArrayList<User>();
+        Datahandler dh = new Datahandler();
+        try {
+            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblUser` INNER JOIN `tblPerson` ON `PersonIDFK` = `PersonIDPK`  AND `Status`= 'Pending'");
             while(rs.next()){
                 users.add(new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
                             new Address(), new Contact(),

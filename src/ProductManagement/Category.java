@@ -40,7 +40,7 @@ public class Category implements Datahandling{
 
     @Override
     public String toString() {
-        return "Category{" + "description=" + description + '}';
+        return description;
     }
 
     @Override
