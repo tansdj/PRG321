@@ -7,6 +7,7 @@ package ProductManagement;
 
 import bc_stationary_bll.Datahandling;
 import bc_stationary_dll.Datahandler;
+import bc_stationary_dll.Datahelper;
 import bc_stationary_dll.TableSpecifiers;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -173,7 +174,7 @@ public class Product implements Datahandling{
         Datahandler dh = new Datahandler();
         ResultSet rs;
         try {
-            rs = dh.selectQuerySpec("SELECT * FROM `tblproduct` INNER JOIN `tblmodel` ON `ModelIDFK` = `ModelIDPK` INNER JOIN `tblcategory` ON `CategoryIDFK` = `CategoryIDPK`");
+            rs = dh.selectQuerySpec(Datahelper.selectProducts);
             while(rs.next()){
                 prods.add(new Product(rs.getString("Name"),rs.getString("Description"),new Category(rs.getString("CatDescription")),rs.getString("Status"),
                         new Model(rs.getString("ModDescription")),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")));
@@ -189,7 +190,7 @@ public class Product implements Datahandling{
         Datahandler dh = new Datahandler();
         ResultSet rs;
         try {
-            rs = dh.selectQuerySpec("SELECT * FROM `tblproduct` INNER JOIN `tblmodel` ON `ModelIDFK` = `ModelIDPK` INNER JOIN `tblcategory` ON `CategoryIDFK` = `CategoryIDPK`");
+            rs = dh.selectQuerySpec(Datahelper.specificProduct(this.name));
             while(rs.next()){
                 prod = (new Product(rs.getString("Name"),rs.getString("Description"),new Category(rs.getString("CatDescription")),rs.getString("Status"),
                         new Model(rs.getString("ModDescription")),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")));

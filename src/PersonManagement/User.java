@@ -7,6 +7,7 @@ package PersonManagement;
 
 import bc_stationary_bll.Datahandling;
 import bc_stationary_dll.Datahandler;
+import bc_stationary_dll.Datahelper;
 import bc_stationary_dll.TableSpecifiers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -134,7 +135,7 @@ public class User implements Datahandling{
         ArrayList<User> users = new ArrayList<User>();
         Datahandler dh = new Datahandler();
         try {
-            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblUser` INNER JOIN `tblPerson` ON `PersonIDFK` = `PersonIDPK`");
+            ResultSet rs = dh.selectQuerySpec(Datahelper.selectUser);
             while(rs.next()){
                 users.add(new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
                             new Address(), new Contact(),
@@ -151,7 +152,7 @@ public class User implements Datahandling{
         ArrayList<User> users = new ArrayList<User>();
         Datahandler dh = new Datahandler();
         try {
-            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblUser` INNER JOIN `tblPerson` ON `PersonIDFK` = `PersonIDPK`  AND `Status`= 'Pending'");
+            ResultSet rs = dh.selectQuerySpec(Datahelper.pendingUser);
             while(rs.next()){
                 users.add(new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
                             new Address(), new Contact(),
@@ -168,7 +169,7 @@ public class User implements Datahandling{
         User user = new User();
         Datahandler dh = new Datahandler();
         try {
-            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblUser` INNER JOIN `tblPerson` ON `PersonIDFK` = `PersonIDPK` WHERE `Username` = '"+this.username+"'");
+            ResultSet rs = dh.selectQuerySpec(Datahelper.specificUser(this.username));
             while(rs.next()){
                 user = (new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
                             new Address(), new Contact(),
