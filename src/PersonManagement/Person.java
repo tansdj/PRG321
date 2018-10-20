@@ -7,6 +7,7 @@ package PersonManagement;
 
 import bc_stationary_bll.Datahandling;
 import bc_stationary_dll.Datahandler;
+import bc_stationary_dll.Datahelper;
 import bc_stationary_dll.TableSpecifiers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -157,8 +158,7 @@ public class Person implements Datahandling{
         ArrayList<Person> person = new ArrayList<Person>();
         try {
             Datahandler dh = new Datahandler();
-            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblperson` INNER JOIN `tbladdress` ON `AddressIDFK`=`AddressIDPK`\n" +
-                    "INNER JOIN `tblcontact` ON `ContactIDPK` = `ContactIDFK` INNER JOIN `tblDepartment` ON `DepIDFK` = `DepartmentIDPK`");
+            ResultSet rs = dh.selectQuerySpec(Datahelper.selectPerson);
             try {
                 while(rs.next()){
                     person.add(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
@@ -176,23 +176,17 @@ public class Person implements Datahandling{
         return person;
     }
 
-    public Person selectSpecPerson(){
+    public Person selectSpecPerson() throws SQLException{
         Person person = new Person();
+        Datahandler dh = new Datahandler();
+        ResultSet rs = dh.selectQuerySpec(Datahelper.specificPerson(this.id));
         try {
-            Datahandler dh = new Datahandler();
-            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblperson` INNER JOIN `tbladdress` ON `AddressIDFK`=`AddressIDPK`\n" +
-                    "INNER JOIN `tblcontact` ON `ContactIDPK` = `ContactIDFK` INNER JOIN `tblDepartment` ON `DepIDFK` = `DepartmentIDPK` WHERE `IDNumber` = '"+this.id+"'");
-            try {
-                while(rs.next()){
-                    person = (new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
-                            new Address(rs.getString("Line1"),rs.getString("Line2"),rs.getString("City"),rs.getString("PostalCode")),
-                            new Contact(rs.getString("Cell"),rs.getString("Email")),
-                            new Department(rs.getString("DepName")),rs.getString("Campus")));
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
+            while(rs.next()){
+                person = (new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
+                        new Address(rs.getString("Line1"),rs.getString("Line2"),rs.getString("City"),rs.getString("PostalCode")),
+                        new Contact(rs.getString("Cell"),rs.getString("Email")),
+                        new Department(rs.getString("DepName")),rs.getString("Campus")));
             }
-            
         } catch (SQLException ex) {
             Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
         }

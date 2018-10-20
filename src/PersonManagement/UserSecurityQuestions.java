@@ -7,6 +7,7 @@ package PersonManagement;
 
 import bc_stationary_bll.Datahandling;
 import bc_stationary_dll.Datahandler;
+import bc_stationary_dll.Datahelper;
 import bc_stationary_dll.TableSpecifiers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -101,8 +102,7 @@ public class UserSecurityQuestions implements Datahandling{
         ArrayList<UserSecurityQuestions> questions = new ArrayList<UserSecurityQuestions>();
         Datahandler dh = new Datahandler();
         try {
-            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblusersecurityquestions` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` "
-                    + "                        INNER JOIN `tblsecurityquestions` ON `QuestionIDFK` = `QuestionIDPK`");
+            ResultSet rs = dh.selectQuerySpec(Datahelper.selectUQuestions);
             while(rs.next()){
                 questions.add(new UserSecurityQuestions(new User(new Person(),rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")),
                               new SecurityQuestions(rs.getString("Question")),rs.getString("Answer")));
@@ -117,8 +117,7 @@ public class UserSecurityQuestions implements Datahandling{
         UserSecurityQuestions questions = new UserSecurityQuestions();
         Datahandler dh = new Datahandler();
         try {
-            ResultSet rs = dh.selectQuerySpec("SELECT * FROM `tblusersecurityquestions` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` "
-                    + "                        INNER JOIN `tblsecurityquestions` ON `QuestionIDFK` = `QuestionIDPK` WHERE `Username` = '"+this.getUser().getUsername()+"'");
+            ResultSet rs = dh.selectQuerySpec(this.getUser().getUsername());
             while(rs.next()){
                 questions = (new UserSecurityQuestions(new User(new Person(),rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")),
                               new SecurityQuestions(rs.getString("Question")),rs.getString("Answer")));

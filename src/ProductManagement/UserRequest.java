@@ -9,6 +9,7 @@ import PersonManagement.Person;
 import PersonManagement.User;
 import bc_stationary_bll.Datahandling;
 import bc_stationary_dll.Datahandler;
+import bc_stationary_dll.Datahelper;
 import bc_stationary_dll.TableSpecifiers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -118,7 +119,7 @@ public class UserRequest implements Datahandling{
         Datahandler dh = new Datahandler();
         ResultSet rs;
         try {
-            rs = dh.selectQuerySpec("SELECT * FROM `tbluserrequest` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDPK`");
+            rs = dh.selectQuerySpec(Datahelper.selectRequest);
             while(rs.next()){
             uReq.add(new UserRequest(new User(new Person(),rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")),new Product(rs.getString("Name"),rs.getString("Description"),new Category(),rs.getString("Status"),
                         new Model(),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity"),rs.getInt("Priority")));
