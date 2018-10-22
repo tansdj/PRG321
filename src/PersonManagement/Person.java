@@ -251,6 +251,7 @@ public class Person implements Datahandling{
             if((p>0)&&(a>0)&&(c>0)){
                 return 1;
             }else{
+                this.delete();
                 return 0;
             }
         } catch (SQLException ex) {
