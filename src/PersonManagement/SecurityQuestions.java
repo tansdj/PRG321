@@ -35,7 +35,7 @@ public class SecurityQuestions implements Datahandling{
     }
 
     public void setQuestion(String question) {
-        this.question = question;
+        this.question = (question.equals(""))?"N.A":question;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class SecurityQuestions implements Datahandling{
     }
 
     @Override
-    public int update() {
+    public synchronized int update() {
         String[][] questions = new String[][]{{"STRING","Question",this.getQuestion()}};
         Datahandler dh = new Datahandler();
         try {
@@ -98,7 +98,7 @@ public class SecurityQuestions implements Datahandling{
     }
 
     @Override
-    public int delete() {
+    public synchronized int delete() {
        Datahandler dh = new Datahandler();
         try {
             return dh.performDelete(TableSpecifiers.SEQURITY_QUESTIONS.getTable(), "`Question` = '"+this.getQuestion()+"'");
@@ -109,7 +109,7 @@ public class SecurityQuestions implements Datahandling{
     }
 
     @Override
-    public int insert() {
+    public synchronized int insert() {
         String[][] questions = new String[][]{{"STRING","Question",this.getQuestion()}};
         Datahandler dh = new Datahandler();
         try {

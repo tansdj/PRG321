@@ -69,7 +69,7 @@ public class UserRequest implements Datahandling{
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.status = (status.equals(""))?"N.A":status;
     }
 
     public int getPriorityLevel() {
@@ -77,7 +77,7 @@ public class UserRequest implements Datahandling{
     }
 
     public void setPriorityLevel(int priorityLevel) {
-        this.priorityLevel = priorityLevel;
+        this.priorityLevel = (priorityLevel<=0)?1:priorityLevel;
     }
 
     public int getQuantity() {
@@ -85,7 +85,7 @@ public class UserRequest implements Datahandling{
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        this.quantity = (quantity<0)?0:quantity;
     }
 
     public Product getProduct() {
@@ -93,7 +93,7 @@ public class UserRequest implements Datahandling{
     }
 
     public void setProduct(Product product) {
-        this.product = product;
+        this.product = (product==null)?new Product():product;
     }
 
     public User getUser() {
@@ -101,7 +101,7 @@ public class UserRequest implements Datahandling{
     }
 
     public void setUser(User user) {
-        this.user = user;
+        this.user = (user==null)?new User():user;
     }
 
     @Override
@@ -178,7 +178,7 @@ public class UserRequest implements Datahandling{
     }
 
     @Override
-    public int update() {
+    public synchronized int update() {
         String[][] reqVals = new String[][]{{"INT","Quantity",Integer.toString(this.quantity)},{"INT","Priority",Integer.toString(this.priorityLevel)},{"STRING","ReqStatus",this.status},{"DATE","DateCompleted",this.completedDate.toString()}};
         Datahandler dh = new Datahandler();
         try {
@@ -191,7 +191,7 @@ public class UserRequest implements Datahandling{
     }
 
     @Override
-    public int delete() {
+    public synchronized int delete() {
         Datahandler dh = new Datahandler();
         try {
             return dh.performDelete(TableSpecifiers.REQUEST.getTable(), "`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.user.getUsername()+"') "
@@ -203,7 +203,7 @@ public class UserRequest implements Datahandling{
     }
 
     @Override
-    public int insert() {
+    public synchronized int insert() {
         String[][] reqVals = new String[][]{{"INT","UserIDFK","(SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.user.getUsername()+"')"},
             {"INT","ProductIDFK","(SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')"},
             {"INT","Quantity",Integer.toString(this.quantity)},{"INT","Priority",Integer.toString(this.priorityLevel)},{"STRING","ReqStatus",this.status},

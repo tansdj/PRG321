@@ -59,7 +59,7 @@ public class Product implements Datahandling{
     }
 
     public void setSalesPrice(double salesPrice) {
-        this.salesPrice = salesPrice;
+        this.salesPrice = (salesPrice<0)?0:salesPrice;
     }
 
     public double getCostPrice() {
@@ -67,7 +67,7 @@ public class Product implements Datahandling{
     }
 
     public void setCostPrice(double costPrice) {
-        this.costPrice = costPrice;
+        this.costPrice = (costPrice<0)?0:costPrice;
     }
 
     public Model getModel() {
@@ -75,7 +75,7 @@ public class Product implements Datahandling{
     }
 
     public void setModel(Model model) {
-        this.model = model;
+        this.model = (model==null)?new Model():model;
     }
 
     public String getStatus() {
@@ -83,7 +83,7 @@ public class Product implements Datahandling{
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.status = (status.equals(""))?"N.A":status;
     }
 
     public Category getCategory() {
@@ -91,7 +91,7 @@ public class Product implements Datahandling{
     }
 
     public void setCategory(Category category) {
-        this.category = category;
+        this.category = (category==null)?new Category():category;
     }
 
     public String getDescription() {
@@ -99,7 +99,7 @@ public class Product implements Datahandling{
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description = (description.equals(""))?"N.A":description;
     }
 
     public String getName() {
@@ -107,7 +107,7 @@ public class Product implements Datahandling{
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = (name.equals(""))?"N.A":name;
     }
 
     @Override
@@ -202,7 +202,7 @@ public class Product implements Datahandling{
     }
     
     @Override
-    public int update() {
+    public synchronized int update() {
         String[][] prodVals = new String[][]{{"STRING","Description",this.description},{"INT","CategoryIDFK"," (SELECT `CategoryIDPK` FROM `tblcategory` WHERE `CatDescription` = '"+this.category.getDescription()+"')"},
                                             {"STRING","Status",this.status},{"INT","ModelIDFK"," (SELECT `ModelIDPK` FROM `tblmodel` WHERE `ModDescription` = '"+this.model.getDescription()+"')"},
                                             {"DOUBLE","CostPrice",Double.toString(this.costPrice)},{"DOUBLE","SalesPrice",Double.toString(this.salesPrice)},{"DATE","EntryDate",this.entryDate.toString()}};
@@ -216,7 +216,7 @@ public class Product implements Datahandling{
     }
 
     @Override
-    public int delete() {
+    public synchronized int delete() {
         Datahandler dh = new Datahandler();
         try {
             return dh.performDelete(TableSpecifiers.PRODUCT.getTable(), "`Name` = '"+this.name+"'");
@@ -227,7 +227,7 @@ public class Product implements Datahandling{
     }
 
     @Override
-    public int insert() {
+    public synchronized int insert() {
         String[][] prodVals = new String[][]{{"STRING","Name",this.name},{"STRING","Description",this.description},{"INT","CategoryIDFK"," (SELECT `CategoryIDPK` FROM `tblcategory` WHERE `CatDescription` = '"+this.category.getDescription()+"')"},
                                             {"STRING","Status",this.status},{"INT","ModelIDFK"," (SELECT `ModelIDPK` FROM `tblmodel` WHERE `ModDescription` = '"+this.model.getDescription()+"')"},
                                             {"DOUBLE","CostPrice",Double.toString(this.costPrice)},{"DOUBLE","SalesPrice",Double.toString(this.salesPrice)},{"DATE","EntryDate",this.entryDate.toString()}};
