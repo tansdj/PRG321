@@ -31,7 +31,7 @@ public class Contact{
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = (email.equals(""))?"N.A":email;
     }
 
     
@@ -40,7 +40,7 @@ public class Contact{
     }
 
     public void setCell(String cell) {
-        this.cell = cell;
+        this.cell = (cell.equals(""))?"N.A":cell;
     }
 
     @Override

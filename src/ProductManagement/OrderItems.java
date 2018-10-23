@@ -5,6 +5,7 @@
  */
 package ProductManagement;
 
+import PersonManagement.User;
 import java.util.Objects;
 
 /**
@@ -30,7 +31,7 @@ public class OrderItems {
     }
 
     public void setQty(int qty) {
-        this.qty = qty;
+        this.qty = (qty<0)?0:qty;
     }
 
 
@@ -39,7 +40,7 @@ public class OrderItems {
     }
 
     public void setProduct(Product product) {
-        this.product = product;
+        this.product = (product==null)?new Product():product;
     }
 
     @Override
