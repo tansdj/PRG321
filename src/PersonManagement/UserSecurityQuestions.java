@@ -31,7 +31,12 @@ public class UserSecurityQuestions implements Datahandling{
         this.question = question;
         this.answer = answer;
     }
-
+    public UserSecurityQuestions(User user)
+    {
+    
+        this.user = user;
+    }
+    
     public UserSecurityQuestions() {
     }
 
@@ -117,7 +122,7 @@ public class UserSecurityQuestions implements Datahandling{
         UserSecurityQuestions questions = new UserSecurityQuestions();
         Datahandler dh = new Datahandler();
         try {
-            ResultSet rs = dh.selectQuerySpec(this.getUser().getUsername());
+            ResultSet rs = dh.selectQuerySpec(Datahelper.specificUQuestions(this.getUser().getUsername()));
             while(rs.next()){
                 questions = (new UserSecurityQuestions(new User(new Person(),rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")),
                               new SecurityQuestions(rs.getString("Question")),rs.getString("Answer")));

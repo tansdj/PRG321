@@ -75,7 +75,7 @@ public class Category implements Datahandling{
         try {
             ResultSet rs = dh.selectQuery(TableSpecifiers.CATEGORY.getTable());
             while(rs.next()){
-                cats.add(new Category(rs.getString("CatDescription")));
+                cats.add(new Category(rs.getString("Description")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,7 +92,7 @@ public class Category implements Datahandling{
     public int delete() {
         Datahandler dh = new Datahandler();
         try {
-            return dh.performDelete(TableSpecifiers.CATEGORY.getTable(), "`CatDescription` = '"+this.getDescription()+"'");
+            return dh.performDelete(TableSpecifiers.CATEGORY.getTable(), "`Description` = '"+this.getDescription()+"'");
         } catch (SQLException ex) {
             Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -101,7 +101,7 @@ public class Category implements Datahandling{
 
     @Override
     public int insert() {
-        String[][] depVals = new String[][]{{"STRING","CatDescription",this.getDescription()}};
+        String[][] depVals = new String[][]{{"STRING","Description",this.getDescription()}};
         Datahandler dh = new Datahandler();
         try {
             return dh.performInsert(TableSpecifiers.CATEGORY.getTable(), depVals);
