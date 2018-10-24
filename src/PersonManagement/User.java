@@ -62,7 +62,7 @@ public class User implements Datahandling{
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.status = (status.equals(""))?"N.A":status;
     }
 
     public String getAccessLevel() {
@@ -70,7 +70,7 @@ public class User implements Datahandling{
     }
 
     public void setAccessLevel(String accessLevel) {
-        this.accessLevel = accessLevel;
+        this.accessLevel = (accessLevel.equals(""))?"N.A":accessLevel;
     }
 
     public String getPassword() {
@@ -78,7 +78,7 @@ public class User implements Datahandling{
     }
 
     public void setPassword(String password) {
-        this.password = password;//Add encryption
+        this.password = (password.equals(""))?"N.A":password;//Add encryption
     }
 
     public String getUsername() {
@@ -86,7 +86,7 @@ public class User implements Datahandling{
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = (username.equals(""))?"N.A":username;
     }
 
     public Person getPerson() {
@@ -94,7 +94,7 @@ public class User implements Datahandling{
     }
 
     public void setPerson(Person person) {
-        this.person = person;
+        this.person = (person==null)?new Person():person;
     }
 
     @Override
@@ -200,10 +200,10 @@ public class User implements Datahandling{
     }
 
     @Override
-    public int update() {
+    public synchronized int update() {
        String encryptedPassword = encryptPassword(this.password);
        String[][] userVals = new String[][]{{"STRING","Password",encryptedPassword},{"STRING","AccessLevel",this.getAccessLevel()},
-                                            {"STRING","Status",this.getStatus()}};
+       {"STRING","Status",this.getStatus()}};
        Datahandler dh = new Datahandler();
         try {
             return dh.performUpdate(TableSpecifiers.USER.getTable(), userVals, "`Username` = '"+this.getUsername()+"'");
@@ -214,7 +214,7 @@ public class User implements Datahandling{
     }
 
     @Override
-    public int delete() {
+    public synchronized int delete() {
        Datahandler dh = new Datahandler();
         try {
             return dh.performDelete(TableSpecifiers.USER.getTable(),"`Username` = '"+this.getUsername()+"'");
@@ -225,7 +225,7 @@ public class User implements Datahandling{
     }
 
     @Override
-    public int insert() {
+    public synchronized int insert() {
         String encryptedPassword = encryptPassword(this.password);
         String[][] userVals = new String[][]{{"INT","PersonIDFK","(SELECT `PersonIDPK` FROM `tblperson` WHERE `IDNumber` = '"+this.person.getId()+"')"},{"STRING","Username",this.getUsername()},{"STRING","Password",encryptedPassword}
                 ,{"STRING","AccessLevel",this.getAccessLevel()},{"STRING","Status",this.getStatus()}};

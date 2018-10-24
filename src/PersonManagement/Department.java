@@ -35,7 +35,7 @@ public class Department implements Datahandling{
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = (name.equals(""))?"N.A":name;
     }
 
     @Override

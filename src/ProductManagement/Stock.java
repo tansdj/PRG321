@@ -38,7 +38,7 @@ public class Stock implements Datahandling{
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        this.quantity = (quantity<0)?0:quantity;
     }
 
     public Product getProduct() {
@@ -46,7 +46,7 @@ public class Stock implements Datahandling{
     }
 
     public void setProduct(Product product) {
-        this.product = product;
+        this.product = (product==null)?new Product():product;
     }
 
     @Override
@@ -115,7 +115,7 @@ public class Stock implements Datahandling{
     }
 
     @Override
-    public int update() {
+    public synchronized int update() {
        String[][] stock = new String[][]{{"INT","Quantity",Integer.toString(this.quantity)}};
        Datahandler dh = new Datahandler();
         try {
@@ -127,7 +127,7 @@ public class Stock implements Datahandling{
     }
 
     @Override
-    public int delete() {
+    public synchronized int delete() {
         Datahandler dh = new Datahandler();
         try {
             return dh.performDelete(TableSpecifiers.STOCK.getTable(), "`ProductIDFK` = (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')");
@@ -138,7 +138,7 @@ public class Stock implements Datahandling{
     }
 
     @Override
-    public int insert() {
+    public synchronized int insert() {
         String[][] stock = new String[][]{{"INT","ProductIDFK"," (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')"},{"INT","Quantity",Integer.toString(this.quantity)}};
        Datahandler dh = new Datahandler();
         try {
