@@ -40,7 +40,7 @@ public class Model implements Datahandling{
 
     @Override
     public String toString() {
-        return "Model{" + "description=" + description + '}';
+        return description;
     }
 
     @Override
