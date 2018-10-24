@@ -40,7 +40,7 @@ public class Model implements Datahandling{
 
     @Override
     public String toString() {
-        return "Model{" + "description=" + description + '}';
+        return description;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class Model implements Datahandling{
         try {
             ResultSet rs = dh.selectQuery(TableSpecifiers.MODEL.getTable());
             while(rs.next()){
-                models.add(new Model(rs.getString("ModDescription")));
+                models.add(new Model(rs.getString("Description")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,7 +92,7 @@ public class Model implements Datahandling{
     public synchronized int delete() {
         Datahandler dh = new Datahandler();
         try {
-            return dh.performDelete(TableSpecifiers.MODEL.getTable(), "`ModDescription` = '"+this.getDescription()+"'");
+            return dh.performDelete(TableSpecifiers.MODEL.getTable(), "`Description` = '"+this.getDescription()+"'");
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }

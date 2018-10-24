@@ -22,8 +22,11 @@ public class SoundEx {
 
             result.append(data.substring(0, 1));
             
-            for (int i = 0; i < data.length(); i++) {
+            for (int i = 1; i < data.length(); i++) {
+                System.out.println(data.length());
+                System.out.println(i);
                 currentLetter = data.substring(i,1).toLowerCase();
+                System.out.println(currentLetter);
                 currentCode = "";
                 
                 if("bfpv".indexOf(currentLetter) > -1)

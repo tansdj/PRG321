@@ -18,10 +18,12 @@ public class Validation {
                 return false;
             }
         }
+        
         return true;
     }
     
     public static boolean testNumericString(String input){
+
         for (int i = 0; i < input.length()-1; i++) {
             if(!Character.isDigit(input.charAt(i))){
                 return false;
@@ -29,7 +31,7 @@ public class Validation {
         }
         return true;
     }
-    
+     
     public static boolean testLength(String input,int min,int max){
         if((input.length()>=min) && (input.length()<=max)){
             return true;
