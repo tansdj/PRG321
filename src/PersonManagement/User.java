@@ -12,9 +12,13 @@ import bc_stationary_dll.TableSpecifiers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  *
@@ -27,6 +31,8 @@ public class User implements Datahandling{
     private String password;
     private String accessLevel;
     private String status;
+    private static final String key = "aesEncryptionKey";
+    private static final String initVector = "encryptionIntVec";
 
     public User(String username, String password) {
         this.username = username;
@@ -41,6 +47,13 @@ public class User implements Datahandling{
         this.status = status;
     }
 
+    public User(String username, String password, String accessLevel, String status) {
+        this.username = username;
+        this.password = password;
+        this.accessLevel = accessLevel;
+        this.status = status;
+    }
+    
     public User() {
     }
 
@@ -134,13 +147,15 @@ public class User implements Datahandling{
     public ArrayList<User> select() {
         ArrayList<User> users = new ArrayList<User>();
         Datahandler dh = new Datahandler();
-        try {
+        try 
+        {
             ResultSet rs = dh.selectQuerySpec(Datahelper.selectUser);
             while(rs.next()){
+                String decryptedPassword = decryptPassword(rs.getString("Password"));              
                 users.add(new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
                             new Address(), new Contact(),
                             new Department(),rs.getString("Campus")),
-                            rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")));
+                            rs.getString("Username"),decryptedPassword,rs.getString("AccessLevel"),rs.getString("Status")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
@@ -154,10 +169,11 @@ public class User implements Datahandling{
         try {
             ResultSet rs = dh.selectQuerySpec(Datahelper.pendingUser);
             while(rs.next()){
+                String decryptedPassword = decryptPassword(rs.getString("Password"));   
                 users.add(new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
                             new Address(), new Contact(),
                             new Department(),rs.getString("Campus")),
-                            rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")));
+                            rs.getString("Username"),decryptedPassword,rs.getString("AccessLevel"),rs.getString("Status")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
@@ -171,10 +187,11 @@ public class User implements Datahandling{
         try {
             ResultSet rs = dh.selectQuerySpec(Datahelper.specificUser(this.username));
             while(rs.next()){
+                String decryptedPassword = decryptPassword(rs.getString("Password"));   
                 user = (new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
                             new Address(), new Contact(),
                             new Department(),rs.getString("Campus")),
-                            rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")));
+                            rs.getString("Username"),decryptedPassword,rs.getString("AccessLevel"),rs.getString("Status")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
@@ -184,8 +201,9 @@ public class User implements Datahandling{
 
     @Override
     public synchronized int update() {
-       String[][] userVals = new String[][]{{"STRING","Password",this.getPassword()},{"STRING","AccessLevel",this.getAccessLevel()},
-                                            {"STRING","Status",this.getStatus()}};
+       String encryptedPassword = encryptPassword(this.password);
+       String[][] userVals = new String[][]{{"STRING","Password",encryptedPassword},{"STRING","AccessLevel",this.getAccessLevel()},
+       {"STRING","Status",this.getStatus()}};
        Datahandler dh = new Datahandler();
         try {
             return dh.performUpdate(TableSpecifiers.USER.getTable(), userVals, "`Username` = '"+this.getUsername()+"'");
@@ -208,8 +226,9 @@ public class User implements Datahandling{
 
     @Override
     public synchronized int insert() {
-        String[][] userVals = new String[][]{{"INT","PersonIDFK","(SELECT `PersonIDPK` FROM `tblperson` WHERE `IDNumber` = '"+this.person.getId()+"')"},{"STRING","Username",this.getUsername()},{"STRING","Password",this.getPassword()},
-                                    {"STRING","AccessLevel",this.getAccessLevel()},{"STRING","Status",this.getStatus()}};
+        String encryptedPassword = encryptPassword(this.password);
+        String[][] userVals = new String[][]{{"INT","PersonIDFK","(SELECT `PersonIDPK` FROM `tblperson` WHERE `IDNumber` = '"+this.person.getId()+"')"},{"STRING","Username",this.getUsername()},{"STRING","Password",encryptedPassword}
+                ,{"STRING","AccessLevel",this.getAccessLevel()},{"STRING","Status",this.getStatus()}};
         Datahandler dh = new Datahandler();
         try {
             return dh.performInsert(TableSpecifiers.USER.getTable(), userVals);
@@ -252,6 +271,40 @@ public class User implements Datahandling{
         }
         
         return userExists;
+    }
+    
+    public static String encryptPassword(String plainText)
+    {
+        try 
+        {
+            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
+            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+            byte[] encrypted = cipher.doFinal(plainText.getBytes());
+            return Base64.getEncoder().encodeToString(encrypted);  
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String decryptPassword(String encryptedText) 
+    {
+        try 
+        {
+            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
+            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+            byte[] original = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
+        return new String(original);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+        }
+        return null;
     }
 
 }

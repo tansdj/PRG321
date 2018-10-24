@@ -11,32 +11,15 @@ package bc_stationary_bll;
  */
 public class CustomException extends Exception{
     
-    public final int errorCode;
-    
-    public CustomException(int code) {
-		super();
-		this.errorCode = code;
-	}
-
-	public CustomException(String message, Throwable cause, int code) {
+	public CustomException(String message, Throwable cause) {
 		super(message, cause);
-		this.errorCode = code;
 	}
 
-	public CustomException(String message, int code) {
+	public CustomException(String message) {
 		super(message);
-		this.errorCode = code;
 	}
 
-	public CustomException(Throwable cause, int code) {
+	public CustomException(Throwable cause) {
 		super(cause);
-		this.errorCode = code;
-	}
-
-    public int getErrorCode() {
-        return errorCode;
-    }
-	
-	
-    
+	}  
 }
