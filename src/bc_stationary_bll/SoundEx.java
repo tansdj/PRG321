@@ -22,11 +22,8 @@ public class SoundEx {
 
             result.append(data.substring(0, 1));
             
-            for (int i = 1; i < data.length(); i++) {
-                System.out.println(data.length());
-                System.out.println(i);
-                currentLetter = data.substring(i,1).toLowerCase();
-                System.out.println(currentLetter);
+            for (int i = 0; i < data.length(); i++) {
+                currentLetter = data.substring(i,i+1).toLowerCase();
                 currentCode = "";
                 
                 if("bfpv".indexOf(currentLetter) > -1)
@@ -72,7 +69,8 @@ public class SoundEx {
         }
         if(result.length() < 4)
             {
-                for (int i = 0; i < 4-result.length(); i++) {
+                int k = result.length();
+                for (int i = 0; i < 4-k; i++) {
                     result.append('0'); // a 0 will be added until the length is four
                 } 
             }
