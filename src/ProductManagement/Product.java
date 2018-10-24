@@ -176,8 +176,8 @@ public class Product implements Datahandling{
         try {
             rs = dh.selectQuerySpec(Datahelper.selectProducts);
             while(rs.next()){
-                prods.add(new Product(rs.getString("Name"),rs.getString("Description"),new Category(rs.getString("CatDescription")),rs.getString("Status"),
-                        new Model(rs.getString("ModDescription")),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")));
+                prods.add(new Product(rs.getString("Name"),rs.getString("Description"),new Category(rs.getString("Description")),rs.getString("Status"),
+                        new Model(rs.getString("Description")),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
@@ -192,8 +192,8 @@ public class Product implements Datahandling{
         try {
             rs = dh.selectQuerySpec(Datahelper.specificProduct(this.name));
             while(rs.next()){
-                prod = (new Product(rs.getString("Name"),rs.getString("Description"),new Category(rs.getString("CatDescription")),rs.getString("Status"),
-                        new Model(rs.getString("ModDescription")),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")));
+                prod = (new Product(rs.getString("Name"),rs.getString("Description"),new Category(rs.getString("Description")),rs.getString("Status"),
+                        new Model(rs.getString("Description")),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);

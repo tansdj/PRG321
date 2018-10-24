@@ -108,7 +108,7 @@ public class Department implements Datahandling{
 
     @Override
     public int insert() {
-        String[][] colValues = new String[][]{{"String","DepName",this.getName()}};
+        String[][] colValues = new String[][]{{"STRING","DepName",this.getName()}};
         Datahandler dh = new Datahandler();
         try {
             return dh.performInsert(TableSpecifiers.DEPARTMENT.getTable(), colValues);
