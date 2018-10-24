@@ -40,7 +40,7 @@ public class UserSecurityQuestions implements Datahandling{
     }
 
     public void setAnswer(String answer) {
-        this.answer = answer;
+        this.answer = (answer.equals(""))?"N.A":answer;
     }
 
     public SecurityQuestions getQuestion() {
@@ -48,7 +48,7 @@ public class UserSecurityQuestions implements Datahandling{
     }
 
     public void setQuestion(SecurityQuestions question) {
-        this.question = question;
+        this.question = (question==null)?new SecurityQuestions():question;
     }
 
     public User getUser() {
@@ -56,7 +56,7 @@ public class UserSecurityQuestions implements Datahandling{
     }
 
     public void setUser(User user) {
-        this.user = user;
+        this.user = (user==null)?new User():user;
     }
 
     @Override
@@ -129,7 +129,7 @@ public class UserSecurityQuestions implements Datahandling{
     }
 
     @Override
-    public int update() {
+    public synchronized int update() {
         String[][] qVals = new String[][]{{"STRING","Answer",this.getAnswer()}};
         Datahandler dh = new Datahandler();
         try {
@@ -142,7 +142,7 @@ public class UserSecurityQuestions implements Datahandling{
     }
 
     @Override
-    public int delete() {
+    public synchronized int delete() {
         Datahandler dh = new Datahandler();
         try {
             return dh.performDelete(TableSpecifiers.USER_QUESTIONS.getTable(), "`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.getUser().getUsername()+"') "
@@ -154,7 +154,7 @@ public class UserSecurityQuestions implements Datahandling{
     }
 
     @Override
-    public int insert() {
+    public synchronized int insert() {
         Datahandler dh = new Datahandler();
         int question = 0;
         int user = 0;

@@ -14,6 +14,7 @@ import bc_stationary_dll.TableSpecifiers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,15 +29,47 @@ public class UserRequest implements Datahandling{
     private Product product;
     private int quantity;
     private int priorityLevel;
+    private String status;
+    private Date reqDate;
+    private Date completedDate;
 
-    public UserRequest(User user, Product product, int quantity, int priorityLevel) {
+    public UserRequest() {
+    }
+
+    public UserRequest(User user, Product product, int quantity, int priorityLevel, String status, Date reqDate, Date completedDate) {
         this.user = user;
         this.product = product;
         this.quantity = quantity;
         this.priorityLevel = priorityLevel;
+        this.status = status;
+        this.reqDate = reqDate;
+        this.completedDate = completedDate;
+    }
+    
+    
+
+    public Date getCompletedDate() {
+        return completedDate;
     }
 
-    public UserRequest() {
+    public void setCompletedDate(Date completedDate) {
+        this.completedDate = completedDate;
+    }
+
+    public Date getReqDate() {
+        return reqDate;
+    }
+
+    public void setReqDate(Date reqDate) {
+        this.reqDate = reqDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = (status.equals(""))?"N.A":status;
     }
 
     public int getPriorityLevel() {
@@ -44,7 +77,7 @@ public class UserRequest implements Datahandling{
     }
 
     public void setPriorityLevel(int priorityLevel) {
-        this.priorityLevel = priorityLevel;
+        this.priorityLevel = (priorityLevel<=0)?1:priorityLevel;
     }
 
     public int getQuantity() {
@@ -52,7 +85,7 @@ public class UserRequest implements Datahandling{
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        this.quantity = (quantity<0)?0:quantity;
     }
 
     public Product getProduct() {
@@ -60,7 +93,7 @@ public class UserRequest implements Datahandling{
     }
 
     public void setProduct(Product product) {
-        this.product = product;
+        this.product = (product==null)?new Product():product;
     }
 
     public User getUser() {
@@ -68,21 +101,24 @@ public class UserRequest implements Datahandling{
     }
 
     public void setUser(User user) {
-        this.user = user;
+        this.user = (user==null)?new User():user;
     }
 
     @Override
     public String toString() {
-        return "UserRequest{" + "user=" + user + ", product=" + product + ", quantity=" + quantity + ", priorityLevel=" + priorityLevel + '}';
+        return "UserRequest{" + "user=" + user + ", product=" + product + ", quantity=" + quantity + ", priorityLevel=" + priorityLevel + ", status=" + status + ", reqDate=" + reqDate + ", completedDate=" + completedDate + '}';
     }
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 23 * hash + Objects.hashCode(this.user);
-        hash = 23 * hash + Objects.hashCode(this.product);
-        hash = 23 * hash + this.quantity;
-        hash = 23 * hash + this.priorityLevel;
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.user);
+        hash = 97 * hash + Objects.hashCode(this.product);
+        hash = 97 * hash + this.quantity;
+        hash = 97 * hash + this.priorityLevel;
+        hash = 97 * hash + Objects.hashCode(this.status);
+        hash = 97 * hash + Objects.hashCode(this.reqDate);
+        hash = 97 * hash + Objects.hashCode(this.completedDate);
         return hash;
     }
 
@@ -104,14 +140,25 @@ public class UserRequest implements Datahandling{
         if (this.priorityLevel != other.priorityLevel) {
             return false;
         }
+        if (!Objects.equals(this.status, other.status)) {
+            return false;
+        }
         if (!Objects.equals(this.user, other.user)) {
             return false;
         }
         if (!Objects.equals(this.product, other.product)) {
             return false;
         }
+        if (!Objects.equals(this.reqDate, other.reqDate)) {
+            return false;
+        }
+        if (!Objects.equals(this.completedDate, other.completedDate)) {
+            return false;
+        }
         return true;
     }
+
+    
 //gdhdh
     @Override
     public ArrayList<UserRequest> select() {
@@ -122,7 +169,7 @@ public class UserRequest implements Datahandling{
             rs = dh.selectQuerySpec(Datahelper.selectRequest);
             while(rs.next()){
             uReq.add(new UserRequest(new User(new Person(),rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")),new Product(rs.getString("Name"),rs.getString("Description"),new Category(),rs.getString("Status"),
-                        new Model(),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity"),rs.getInt("Priority")));
+                        new Model(),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity"),rs.getInt("Priority"),rs.getString("ReqStatus"),rs.getDate("ReqDate"),rs.getDate("DateCompleted")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
@@ -131,8 +178,8 @@ public class UserRequest implements Datahandling{
     }
 
     @Override
-    public int update() {
-        String[][] reqVals = new String[][]{{"INT","Quantity",Integer.toString(this.quantity)},{"INT","Priority",Integer.toString(this.priorityLevel)}};
+    public synchronized int update() {
+        String[][] reqVals = new String[][]{{"INT","Quantity",Integer.toString(this.quantity)},{"INT","Priority",Integer.toString(this.priorityLevel)},{"STRING","ReqStatus",this.status},{"DATE","DateCompleted",this.completedDate.toString()}};
         Datahandler dh = new Datahandler();
         try {
             return dh.performUpdate(TableSpecifiers.REQUEST.getTable(), reqVals, "`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.user.getUsername()+"') "
@@ -144,7 +191,7 @@ public class UserRequest implements Datahandling{
     }
 
     @Override
-    public int delete() {
+    public synchronized int delete() {
         Datahandler dh = new Datahandler();
         try {
             return dh.performDelete(TableSpecifiers.REQUEST.getTable(), "`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.user.getUsername()+"') "
@@ -156,10 +203,11 @@ public class UserRequest implements Datahandling{
     }
 
     @Override
-    public int insert() {
+    public synchronized int insert() {
         String[][] reqVals = new String[][]{{"INT","UserIDFK","(SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.user.getUsername()+"')"},
             {"INT","ProductIDFK","(SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')"},
-            {"INT","Quantity",Integer.toString(this.quantity)},{"INT","Priority",Integer.toString(this.priorityLevel)}};
+            {"INT","Quantity",Integer.toString(this.quantity)},{"INT","Priority",Integer.toString(this.priorityLevel)},{"STRING","ReqStatus",this.status},
+            {"DATE","ReqDate",this.reqDate.toString()},{"DATE","DateCompleted",this.completedDate.toString()}};
         Datahandler dh = new Datahandler();
         try {
             return dh.performInsert(TableSpecifiers.REQUEST.getTable(), reqVals);

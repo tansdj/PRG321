@@ -48,7 +48,7 @@ public class Person implements Datahandling{
     }
 
     public void setCampus(String campus) {
-        this.campus = campus;
+        this.campus = (campus.equals(""))?"N.A":campus;
     }
 
     public Department getDepartment() {
@@ -56,7 +56,7 @@ public class Person implements Datahandling{
     }
 
     public void setDepartment(Department department) {
-        this.department = department;
+        this.department = (department==null)?new Department():department;
     }
 
     public Contact getContact() {
@@ -64,7 +64,7 @@ public class Person implements Datahandling{
     }
 
     public void setContact(Contact contact) {
-        this.contact = contact;
+        this.contact = (contact==null)?new Contact():contact;
     }
 
     public Address getAddress() {
@@ -72,7 +72,7 @@ public class Person implements Datahandling{
     }
 
     public void setAddress(Address address) {
-        this.address = address;
+        this.address = (address==null)?new Address():address;
     }
 
     public String getId() {
@@ -80,7 +80,7 @@ public class Person implements Datahandling{
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id = (id.equals(""))?"N.A":id;
     }
 
     public String getSurname() {
@@ -88,7 +88,7 @@ public class Person implements Datahandling{
     }
 
     public void setSurname(String surname) {
-        this.surname = surname;
+        this.surname = (surname.equals(""))?"N.A":surname;
     }
 
     public String getName() {
@@ -96,7 +96,7 @@ public class Person implements Datahandling{
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = (name.equals(""))?"N.A":name;
     }
 
     @Override
@@ -194,7 +194,7 @@ public class Person implements Datahandling{
     }
     
     @Override
-    public int update() {
+    public synchronized int update() {
         try {
             String[][] personValues = new String[][]{{"STRING","Name",this.name},{"STRING","Surname",this.surname},
                 {"INT","DepIDFK","(SELECT `DepartmentIDPK` FROM `tbldepartment` WHERE `DepName` = '"+this.department.getName()+"')"},{"STRING","Campus",this.campus}};
@@ -219,7 +219,7 @@ public class Person implements Datahandling{
     }
 
     @Override
-    public int delete() {
+    public synchronized int delete() {
        Datahandler dh = new Datahandler();
         try {
             return dh.performDelete(TableSpecifiers.PERSON.getTable(), "`IDNumber` = '"+this.id+"'");
@@ -230,7 +230,7 @@ public class Person implements Datahandling{
     }
 
     @Override
-    public int insert() {
+    public synchronized int insert() {
         try {
             Datahandler dh = new Datahandler();
             
@@ -251,6 +251,7 @@ public class Person implements Datahandling{
             if((p>0)&&(a>0)&&(c>0)){
                 return 1;
             }else{
+                this.delete();
                 return 0;
             }
         } catch (SQLException ex) {

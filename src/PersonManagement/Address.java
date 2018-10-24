@@ -35,7 +35,7 @@ public class Address{
     }
 
     public void setCity(String city) {
-        this.city = city;
+        this.city = (city.equals(""))?"N.A":city;
     }
 
     public String getPostalCode() {
@@ -43,7 +43,7 @@ public class Address{
     }
 
     public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
+        this.postalCode = (postalCode.equals(""))?"N.A":postalCode;
     }
 
     public String getLine2() {
@@ -51,7 +51,7 @@ public class Address{
     }
 
     public void setLine2(String line2) {
-        this.line2 = line2;
+        this.line2 = (line2.equals(""))?"N.A":line2;
     }
 
     public String getLine1() {
@@ -59,7 +59,7 @@ public class Address{
     }
 
     public void setLine1(String line1) {
-        this.line1 = line1;
+        this.line1 = (line1.equals(""))?"N.A":line1;
     }
 
     @Override

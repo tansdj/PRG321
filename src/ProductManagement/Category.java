@@ -35,7 +35,7 @@ public class Category implements Datahandling{
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description = (description.equals(""))?"N.A":description;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class Category implements Datahandling{
     }
 
     @Override
-    public int delete() {
+    public synchronized int delete() {
         Datahandler dh = new Datahandler();
         try {
             return dh.performDelete(TableSpecifiers.CATEGORY.getTable(), "`CatDescription` = '"+this.getDescription()+"'");
@@ -100,7 +100,7 @@ public class Category implements Datahandling{
     }
 
     @Override
-    public int insert() {
+    public synchronized int insert() {
         String[][] depVals = new String[][]{{"STRING","CatDescription",this.getDescription()}};
         Datahandler dh = new Datahandler();
         try {
