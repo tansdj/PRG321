@@ -9,6 +9,7 @@ import bc_stationary_bll.Datahandling;
 import bc_stationary_dll.Datahandler;
 import bc_stationary_dll.Datahelper;
 import bc_stationary_dll.TableSpecifiers;
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import javax.crypto.spec.SecretKeySpec;
  *
  * @author Tanya
  */
-public class User implements Datahandling{
+public class User implements Datahandling,Serializable{
     
     private Person person;
     private String username;
@@ -299,7 +300,7 @@ public class User implements Datahandling{
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
             byte[] original = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
-        return new String(original);
+            return new String(original);
         } catch (Exception ex) {
             ex.printStackTrace();
 

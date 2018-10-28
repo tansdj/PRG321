@@ -106,7 +106,7 @@ public class UserRequest implements Datahandling{
 
     @Override
     public String toString() {
-        return "UserRequest{" + "user=" + user + ", product=" + product + ", quantity=" + quantity + ", priorityLevel=" + priorityLevel + ", status=" + status + ", reqDate=" + reqDate + ", completedDate=" + completedDate + '}';
+        return String.format("%S    %d  %d  %S  %S  %S\n",product.getName(),quantity,priorityLevel,status,reqDate,completedDate);
     }
 
     @Override

@@ -6,6 +6,7 @@
 package PersonManagement;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -13,7 +14,7 @@ import java.util.Objects;
  *
  * @author Tanya
  */
-public class Address{
+public class Address implements Serializable{
     
     private String line1;
     private String line2;

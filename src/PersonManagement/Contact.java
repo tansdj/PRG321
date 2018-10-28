@@ -6,6 +6,7 @@
 package PersonManagement;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -13,7 +14,7 @@ import java.util.Objects;
  *
  * @author Tanya
  */
-public class Contact{
+public class Contact implements Serializable{
     
     private String cell;
     private String email;

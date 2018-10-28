@@ -90,8 +90,8 @@ public class Stock implements Datahandling{
         try {
             ResultSet rs = dh.selectQuerySpec(Datahelper.selectStock);
             while(rs.next()){
-                stock.add(new Stock(new Product(rs.getString("Name"),rs.getString("Description"),new Category(),rs.getString("Status"),
-                        new Model(),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity")));
+                stock.add(new Stock(new Product(rs.getString("Name"),rs.getString("Description"),new Category(rs.getString("CatDescription")),rs.getString("Status"),
+                        new Model(rs.getString("ModDescription")),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
@@ -105,8 +105,8 @@ public class Stock implements Datahandling{
         try {
             ResultSet rs = dh.selectQuerySpec(Datahelper.specificStock(this.getProduct().getName()));
             while(rs.next()){
-                stock = (new Stock(new Product(rs.getString("Name"),rs.getString("Description"),new Category(),rs.getString("Status"),
-                        new Model(),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity")));
+                stock = (new Stock(new Product(rs.getString("Name"),rs.getString("Description"),new Category(rs.getString("CatDescription")),rs.getString("Status"),
+                        new Model(rs.getString("ModDescription")),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
