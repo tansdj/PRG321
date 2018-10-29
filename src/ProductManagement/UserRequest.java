@@ -45,7 +45,10 @@ public class UserRequest implements Datahandling{
         this.reqDate = reqDate;
         this.completedDate = completedDate;
     }
-    
+
+    public UserRequest(User user) {
+        this.user = user;
+    }
     
 
     public Date getCompletedDate() {
@@ -106,7 +109,7 @@ public class UserRequest implements Datahandling{
 
     @Override
     public String toString() {
-        return "UserRequest{" + "user=" + user + ", product=" + product + ", quantity=" + quantity + ", priorityLevel=" + priorityLevel + ", status=" + status + ", reqDate=" + reqDate + ", completedDate=" + completedDate + '}';
+        return String.format("%S    %d  %d  %S  %S  %S\n",product.getName(),quantity,priorityLevel,status,reqDate,completedDate);
     }
 
     @Override
@@ -175,6 +178,48 @@ public class UserRequest implements Datahandling{
             Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
         }
         return uReq;
+    }
+    
+    public ArrayList<UserRequest> selectUnprocessed(){
+        ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
+        Datahandler dh = new Datahandler();
+        ResultSet rs;
+        try {
+            rs = dh.selectQuerySpec(Datahelper.selectUnprocessedRequests);
+            while(rs.next()){
+            uReq.add(new UserRequest(new User(new Person(),rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")),new Product(rs.getString("Name"),rs.getString("Description"),new Category(),rs.getString("Status"),
+                        new Model(),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity"),rs.getInt("Priority"),rs.getString("ReqStatus"),rs.getDate("ReqDate"),rs.getDate("DateCompleted")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return uReq;
+    }
+    
+    public ArrayList<UserRequest> selectSpecUserRequest(){
+        ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
+        Datahandler dh = new Datahandler();
+        ResultSet rs;
+        try {
+            rs = dh.selectQuerySpec(Datahelper.selectSpecUserRequest(this.user.getUsername()));
+            while(rs.next()){
+            uReq.add(new UserRequest(new User(new Person(),rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")),new Product(rs.getString("Name"),rs.getString("Description"),new Category(),rs.getString("Status"),
+                        new Model(),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity"),rs.getInt("Priority"),rs.getString("ReqStatus"),rs.getDate("ReqDate"),rs.getDate("DateCompleted")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return uReq;
+    }
+    
+    public ArrayList<Product> productsOnRequest(){
+        ArrayList<Product> products = new ArrayList<Product>();
+        ArrayList<UserRequest> ur = this.selectUnprocessed();
+        for(UserRequest u:ur){
+            Product p = u.getProduct().selectSpecProduct();
+            products.add(p);
+        }
+        return products;
     }
 
     @Override

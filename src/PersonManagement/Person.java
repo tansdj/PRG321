@@ -9,6 +9,7 @@ import bc_stationary_bll.Datahandling;
 import bc_stationary_dll.Datahandler;
 import bc_stationary_dll.Datahelper;
 import bc_stationary_dll.TableSpecifiers;
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author Tanya
  */
-public class Person implements Datahandling{
+public class Person implements Datahandling,Serializable{
     
     private String name;
     private String surname;
@@ -38,6 +39,12 @@ public class Person implements Datahandling{
         this.contact = contact;
         this.department = department;
         this.campus = campus;
+    }
+
+    public Person(String name, String surname, String id) {
+        this.name = name;
+        this.surname = surname;
+        this.id = id;
     }
 
     public Person() {

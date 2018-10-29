@@ -14,8 +14,10 @@ public class Validation {
     
     public static boolean testProperString(String input){
         for (int i = 0; i < input.length()-1; i++) {
-            if(!Character.isLetter(input.charAt(i))){
+            if((!Character.isLetter(input.charAt(i)))){
+                if((!Character.toString(input.charAt(i)).equals(" "))){
                 return false;
+                }
             }
         }
         
