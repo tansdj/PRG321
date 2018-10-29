@@ -239,23 +239,26 @@ public class User implements Datahandling,Serializable{
         return -1;
     }
     
-    public boolean testLogin()
+    public int testLogin()
     {
-        boolean accessAllowed = false;
         ArrayList<User> users = new ArrayList<User>();
         users = select();
         for(User user: users)
         {
             if(user.username.equals(this.username)&&(user.password.equals(this.password)))
             {
-               if(!user.status.toLowerCase().equals("pending")||(!user.status.toLowerCase().equals("disabled")))
+               if(user.status.toLowerCase().equals("pending"))
                {
-                   accessAllowed = true;
+                  return -1;
                }
-            }
+               if(user.status.toLowerCase().equals("disabled"))
+               {
+                  return -1;
+               }
+               return 1;
+            }  
         }
-        
-        return accessAllowed;
+        return 0;
     }
     
     public boolean testForExistingUser() // Check to see if username and password is unique
