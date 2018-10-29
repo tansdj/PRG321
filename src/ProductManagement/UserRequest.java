@@ -28,7 +28,7 @@ public class UserRequest implements Datahandling{
     private User user;
     private Product product;
     private int quantity;
-    private int priorityLevel;
+    public int priorityLevel;
     private String status;
     private Date reqDate;
     private Date completedDate;
