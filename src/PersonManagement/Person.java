@@ -163,20 +163,15 @@ public class Person implements Datahandling,Serializable{
     @Override
     public ArrayList<Person> select() {
         ArrayList<Person> person = new ArrayList<Person>();
+        Datahandler dh = new Datahandler();
         try {
-            Datahandler dh = new Datahandler();
             ResultSet rs = dh.selectQuerySpec(Datahelper.selectPerson);
-            try {
-                while(rs.next()){
-                    person.add(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
-                            new Address(rs.getString("Line1"),rs.getString("Line2"),rs.getString("City"),rs.getString("PostalCode")),
-                            new Contact(rs.getString("Cell"),rs.getString("Email")),
-                            new Department(rs.getString("DepName")),rs.getString("Campus")));
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
+            while(rs.next()){
+                person.add(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
+                        new Address(rs.getString("Line1"),rs.getString("Line2"),rs.getString("City"),rs.getString("PostalCode")),
+                        new Contact(rs.getString("Cell"),rs.getString("Email")),
+                        new Department(rs.getString("DepName")),rs.getString("Campus")));
             }
-            
         } catch (SQLException ex) {
             Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
         }
