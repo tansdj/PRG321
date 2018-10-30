@@ -140,12 +140,12 @@ public class Order implements Datahandling {
         return orders;
     }
 
-    public ArrayList<Order> selectSpecOrder() {
+    public ArrayList<Order> selectUserOrders() {
         ArrayList<Order> orders = new ArrayList<Order>();
         Datahandler dh = new Datahandler();
         ResultSet rs;
         try {
-            rs = dh.selectQuerySpec(Datahelper.specificOrder(this.user.getUsername(), this.orderDate, this.receivedDate));
+            rs = dh.selectQuerySpec(Datahelper.specificUserOrders(this.user.getUsername(), this.orderDate, this.receivedDate));
             while (rs.next()) {
                 ResultSet rs2 = dh.selectQuerySpec(Datahelper.selectOrderItems(rs.getInt("OrderIDPK")));
                 ArrayList<OrderItems> items = new ArrayList<OrderItems>();
@@ -159,6 +159,22 @@ public class Order implements Datahandling {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
         return orders;
+    }
+    
+    public Order selectUserOpenOrder(){
+        Order o = null;
+        Datahandler dh = new Datahandler();
+        ResultSet rs;
+        try {
+            rs = dh.selectQuerySpec(Datahelper.specificUserOpenOrder(this.user.getUsername()));
+            while (rs.next()) {
+                ResultSet rs2 = dh.selectQuerySpec(Datahelper.selectOrderItems(rs.getInt("OrderIDPK")));
+                o = new Order(new User(new Person(), rs.getString("Username"), rs.getString("Password"), rs.getString("AccessLevel"), rs.getString("Status")), rs.getDate("OrderDate"), rs.getDate("ReceivedDate"), null, rs.getInt("OrderIDPK"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return o;
     }
 
     @Override
