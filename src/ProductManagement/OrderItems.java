@@ -6,7 +6,12 @@
 package ProductManagement;
 
 import PersonManagement.User;
+import bc_stationary_dll.Datahandler;
+import bc_stationary_dll.TableSpecifiers;
+import java.sql.SQLException;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -16,6 +21,7 @@ public class OrderItems {
     
     private Product product;
     private int qty;
+    private Order orderToUpdate;
 
     public OrderItems() {
     }
@@ -23,6 +29,12 @@ public class OrderItems {
     public OrderItems(Product product, int qty) {
         this.product = product;
         this.qty = qty;
+    }
+
+    public OrderItems(Product product, int qty, Order orderToUpdate) {
+        this.product = product;
+        this.qty = qty;
+        this.orderToUpdate = orderToUpdate;
     }
     
     
@@ -76,5 +88,16 @@ public class OrderItems {
         }
         return true;
     }
+    
+    public synchronized int insert() throws SQLException {
+        String[][] itemVals = null;
+            itemVals = new String[][]{{"INT", "OrderIDFK", "(SELECT `OrderIDPK` FROM `tblorder` INNER JOIN `tbluser` ON `UserIdFK` = `UserIDPK` WHERE `Username` = '"+this.orderToUpdate.getUser().getUsername()+"' AND `OrderDate`>`ReceivedDate` ORDER BY `OrderIDPK` DESC LIMIT 1)"},
+            {"INT", "ProductIDFK", "(SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '" + this.getProduct().getName() + "')"},
+            {"INT", "ItemQty", Integer.toString(this.qty)}};
+        
+        Datahandler dh = new Datahandler();
+        return dh.performInsert(TableSpecifiers.ORDER_ITEMS.getTable(), itemVals);
+
+    } 
 
 }
