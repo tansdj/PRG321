@@ -23,8 +23,8 @@ import java.util.logging.Logger;
  *
  * @author Tanya
  */
-public class UserRequest implements Datahandling{
-    
+public class UserRequest implements Datahandling {
+
     private User user;
     private Product product;
     private int quantity;
@@ -49,7 +49,6 @@ public class UserRequest implements Datahandling{
     public UserRequest(User user) {
         this.user = user;
     }
-    
 
     public Date getCompletedDate() {
         return completedDate;
@@ -72,7 +71,7 @@ public class UserRequest implements Datahandling{
     }
 
     public void setStatus(String status) {
-        this.status = (status.equals(""))?"N.A":status;
+        this.status = (status.equals("")) ? "N.A" : status;
     }
 
     public int getPriorityLevel() {
@@ -80,7 +79,7 @@ public class UserRequest implements Datahandling{
     }
 
     public void setPriorityLevel(int priorityLevel) {
-        this.priorityLevel = (priorityLevel<=0)?1:priorityLevel;
+        this.priorityLevel = (priorityLevel <= 0) ? 1 : priorityLevel;
     }
 
     public int getQuantity() {
@@ -88,7 +87,7 @@ public class UserRequest implements Datahandling{
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = (quantity<0)?0:quantity;
+        this.quantity = (quantity < 0) ? 0 : quantity;
     }
 
     public Product getProduct() {
@@ -96,7 +95,7 @@ public class UserRequest implements Datahandling{
     }
 
     public void setProduct(Product product) {
-        this.product = (product==null)?new Product():product;
+        this.product = (product == null) ? new Product() : product;
     }
 
     public User getUser() {
@@ -104,12 +103,12 @@ public class UserRequest implements Datahandling{
     }
 
     public void setUser(User user) {
-        this.user = (user==null)?new User():user;
+        this.user = (user == null) ? new User() : user;
     }
 
     @Override
     public String toString() {
-        return String.format("%S    %d  %d  %S  %S  %S\n",product.getName(),quantity,priorityLevel,status,reqDate,completedDate);
+        return String.format("%S    %d  %d  %S  %S  %S\n", product.getName(), quantity, priorityLevel, status, reqDate, completedDate);
     }
 
     @Override
@@ -161,7 +160,6 @@ public class UserRequest implements Datahandling{
         return true;
     }
 
-    
 //gdhdh
     @Override
     public ArrayList<UserRequest> select() {
@@ -170,25 +168,43 @@ public class UserRequest implements Datahandling{
         ResultSet rs;
         try {
             rs = dh.selectQuerySpec(Datahelper.selectRequest);
-            while(rs.next()){
-            uReq.add(new UserRequest(new User(new Person(),rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")),new Product(rs.getString("Name"),rs.getString("Description"),new Category(),rs.getString("Status"),
-                        new Model(),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity"),rs.getInt("Priority"),rs.getString("ReqStatus"),rs.getDate("ReqDate"),rs.getDate("DateCompleted")));
+            while (rs.next()) {
+                uReq.add(new UserRequest(new User(new Person(), rs.getString("Username"), rs.getString("Password"), rs.getString("AccessLevel"), rs.getString("Status")), new Product(rs.getString("Name"), rs.getString("Description"), new Category(), rs.getString("Status"),
+                        new Model(), rs.getDouble("CostPrice"), rs.getDouble("SalesPrice"), rs.getDate("EntryDate")), rs.getInt("Quantity"), rs.getInt("Priority"), rs.getString("ReqStatus"), rs.getDate("ReqDate"), rs.getDate("DateCompleted")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
         }
         return uReq;
     }
-    
-    public ArrayList<UserRequest> selectUnprocessed(){
+
+    public ArrayList<UserRequest> selectUnprocessed() {
         ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
         Datahandler dh = new Datahandler();
         ResultSet rs;
         try {
             rs = dh.selectQuerySpec(Datahelper.selectUnprocessedRequests);
-            while(rs.next()){
-            uReq.add(new UserRequest(new User(new Person(),rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")),new Product(rs.getString("Name"),rs.getString("Description"),new Category(),rs.getString("Status"),
-                        new Model(),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity"),rs.getInt("Priority"),rs.getString("ReqStatus"),rs.getDate("ReqDate"),rs.getDate("DateCompleted")));
+            while (rs.next()) {
+                uReq.add(new UserRequest(new User(new Person(), rs.getString("Username"), rs.getString("Password"), rs.getString("AccessLevel"), rs.getString("Status")), new Product(rs.getString("Name"), rs.getString("Description"), new Category(), rs.getString("Status"),
+                        new Model(), rs.getDouble("CostPrice"), rs.getDouble("SalesPrice"), rs.getDate("EntryDate")), rs.getInt("Quantity"), rs.getInt("Priority"), rs.getString("ReqStatus"), rs.getDate("ReqDate"), rs.getDate("DateCompleted")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return uReq;
+    }
+
+    public ArrayList<UserRequest> selectUnprocessed_BackOrder(String productName) {
+        ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
+        Datahandler dh = new Datahandler();
+        ResultSet rs;
+        try {
+            rs = dh.selectQuerySpec(Datahelper.selectUnprocessed_BackOrderRequests);
+            while (rs.next()) {
+                if (rs.getString("Name").equals(productName)) {
+                    uReq.add(new UserRequest(new User(new Person(), rs.getString("Username"), rs.getString("Password"), rs.getString("AccessLevel"), rs.getString("Status")), new Product(rs.getString("Name"), rs.getString("Description"), new Category(), rs.getString("Status"),
+                            new Model(), rs.getDouble("CostPrice"), rs.getDouble("SalesPrice"), rs.getDate("EntryDate")), rs.getInt("Quantity"), rs.getInt("Priority"), rs.getString("ReqStatus"), rs.getDate("ReqDate"), rs.getDate("DateCompleted")));
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
@@ -196,26 +212,26 @@ public class UserRequest implements Datahandling{
         return uReq;
     }
     
-    public ArrayList<UserRequest> selectSpecUserRequest(){
+    public ArrayList<UserRequest> selectSpecUserRequest() {
         ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
         Datahandler dh = new Datahandler();
         ResultSet rs;
         try {
             rs = dh.selectQuerySpec(Datahelper.selectSpecUserRequest(this.user.getUsername()));
-            while(rs.next()){
-            uReq.add(new UserRequest(new User(new Person(),rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")),new Product(rs.getString("Name"),rs.getString("Description"),new Category(),rs.getString("Status"),
-                        new Model(),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")),rs.getInt("Quantity"),rs.getInt("Priority"),rs.getString("ReqStatus"),rs.getDate("ReqDate"),rs.getDate("DateCompleted")));
+            while (rs.next()) {
+                uReq.add(new UserRequest(new User(new Person(), rs.getString("Username"), rs.getString("Password"), rs.getString("AccessLevel"), rs.getString("Status")), new Product(rs.getString("Name"), rs.getString("Description"), new Category(), rs.getString("Status"),
+                        new Model(), rs.getDouble("CostPrice"), rs.getDouble("SalesPrice"), rs.getDate("EntryDate")), rs.getInt("Quantity"), rs.getInt("Priority"), rs.getString("ReqStatus"), rs.getDate("ReqDate"), rs.getDate("DateCompleted")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
         }
         return uReq;
     }
-    
-    public ArrayList<Product> productsOnRequest(){
+
+    public ArrayList<Product> productsOnRequest() {
         ArrayList<Product> products = new ArrayList<Product>();
         ArrayList<UserRequest> ur = this.selectUnprocessed();
-        for(UserRequest u:ur){
+        for (UserRequest u : ur) {
             Product p = u.getProduct().selectSpecProduct();
             products.add(p);
         }
@@ -224,11 +240,11 @@ public class UserRequest implements Datahandling{
 
     @Override
     public synchronized int update() {
-        String[][] reqVals = new String[][]{{"INT","Quantity",Integer.toString(this.quantity)},{"INT","Priority",Integer.toString(this.priorityLevel)},{"STRING","ReqStatus",this.status},{"DATE","DateCompleted",this.completedDate.toString()}};
+        String[][] reqVals = new String[][]{{"INT", "Quantity", Integer.toString(this.quantity)}, {"INT", "Priority", Integer.toString(this.priorityLevel)}, {"STRING", "ReqStatus", this.status}, {"DATE", "DateCompleted", this.completedDate.toString()}};
         Datahandler dh = new Datahandler();
         try {
-            return dh.performUpdate(TableSpecifiers.REQUEST.getTable(), reqVals, "`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.user.getUsername()+"') "
-                    + "AND `ProductIDFK` = (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')");
+            return dh.performUpdate(TableSpecifiers.REQUEST.getTable(), reqVals, "`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '" + this.user.getUsername() + "') "
+                    + "AND `ProductIDFK` = (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '" + this.product.getName() + "')");
         } catch (SQLException ex) {
             Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -239,8 +255,8 @@ public class UserRequest implements Datahandling{
     public synchronized int delete() {
         Datahandler dh = new Datahandler();
         try {
-            return dh.performDelete(TableSpecifiers.REQUEST.getTable(), "`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.user.getUsername()+"') "
-                    + "AND `ProductIDFK` = (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')");
+            return dh.performDelete(TableSpecifiers.REQUEST.getTable(), "`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '" + this.user.getUsername() + "') "
+                    + "AND `ProductIDFK` = (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '" + this.product.getName() + "')");
         } catch (SQLException ex) {
             Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -249,10 +265,10 @@ public class UserRequest implements Datahandling{
 
     @Override
     public synchronized int insert() {
-        String[][] reqVals = new String[][]{{"INT","UserIDFK","(SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.user.getUsername()+"')"},
-            {"INT","ProductIDFK","(SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')"},
-            {"INT","Quantity",Integer.toString(this.quantity)},{"INT","Priority",Integer.toString(this.priorityLevel)},{"STRING","ReqStatus",this.status},
-            {"DATE","ReqDate",this.reqDate.toString()},{"DATE","DateCompleted",this.completedDate.toString()}};
+        String[][] reqVals = new String[][]{{"INT", "UserIDFK", "(SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '" + this.user.getUsername() + "')"},
+        {"INT", "ProductIDFK", "(SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '" + this.product.getName() + "')"},
+        {"INT", "Quantity", Integer.toString(this.quantity)}, {"INT", "Priority", Integer.toString(this.priorityLevel)}, {"STRING", "ReqStatus", this.status},
+        {"DATE", "ReqDate", this.reqDate.toString()}, {"DATE", "DateCompleted", this.completedDate.toString()}};
         Datahandler dh = new Datahandler();
         try {
             return dh.performInsert(TableSpecifiers.REQUEST.getTable(), reqVals);

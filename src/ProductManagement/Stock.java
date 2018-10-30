@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 public class Stock implements Datahandling{
     
     private Product product;
-    private int quantity;
+    public int quantity;
 
     public Stock(Product product, int quantity) {
         this.product = product;
