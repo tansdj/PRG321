@@ -53,6 +53,14 @@ public class Stock implements Datahandling{
     public String toString() {
         return product.toString() +"\t"+ quantity;
     }
+    
+    public String reportToString()
+    {
+        String returnString = String.format("Stock for product %1$s is: %2$10d",
+                product.getName(),
+                quantity);
+        return returnString;
+    }
 
     @Override
     public int hashCode() {
