@@ -13,6 +13,7 @@ import bc_stationary_dll.Datahelper;
 import bc_stationary_dll.TableSpecifiers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
@@ -110,6 +111,20 @@ public class UserRequest implements Datahandling{
     @Override
     public String toString() {
         return String.format("%S    %d  %d  %S  %S  %S\n",product.getName(),quantity,priorityLevel,status,reqDate,completedDate);
+    }
+    
+    public String reportToString()
+    {
+        SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String returnString = String.format("|User: %1$s | requested %2$5s x %3$d | for %4$s | priority level %5$3s | current status %6$s | request was completed on %7$2s |",
+                user.getUsername(),
+                product.getName(),
+                quantity,
+                simpleDateFormatter.format(reqDate),
+                priorityLevel,
+                status,
+                simpleDateFormatter.format(completedDate));
+        return returnString;
     }
 
     @Override
