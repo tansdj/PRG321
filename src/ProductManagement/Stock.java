@@ -61,6 +61,14 @@ public class Stock implements Datahandling{
                 quantity);
         return returnString;
     }
+    
+    public String purchaseOrderToString()
+    {
+        String returnString = String.format("Product Name: %1$s /n Requesting: %2$10d amount of items",
+                product.getName(),
+                quantity);
+        return returnString;
+    }
 
     @Override
     public int hashCode() {

@@ -125,6 +125,7 @@ public class UserRequest implements Datahandling {
                 simpleDateFormatter.format(completedDate));
         return returnString;
     }
+    
 
     @Override
     public int hashCode() {
@@ -193,12 +194,12 @@ public class UserRequest implements Datahandling {
         return uReq;
     }
 
-    public ArrayList<UserRequest> selectUnprocessed() {
+    public ArrayList<UserRequest> selectUnprocessed_BackOrder() {
         ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
         Datahandler dh = new Datahandler();
         ResultSet rs;
         try {
-            rs = dh.selectQuerySpec(Datahelper.selectUnprocessedRequests);
+            rs = dh.selectQuerySpec(Datahelper.selectUnprocessed_BackOrderRequests);
             while (rs.next()) {
                 uReq.add(new UserRequest(new User(new Person(), rs.getString("Username"), rs.getString("Password"), rs.getString("AccessLevel"), rs.getString("Status")), new Product(rs.getString("Name"), rs.getString("Description"), new Category(), rs.getString("Status"),
                         new Model(), rs.getDouble("CostPrice"), rs.getDouble("SalesPrice"), rs.getDate("EntryDate")), rs.getInt("Quantity"), rs.getInt("Priority"), rs.getString("ReqStatus"), rs.getDate("ReqDate"), rs.getDate("DateCompleted")));
@@ -245,7 +246,7 @@ public class UserRequest implements Datahandling {
 
     public ArrayList<Product> productsOnRequest() {
         ArrayList<Product> products = new ArrayList<Product>();
-        ArrayList<UserRequest> ur = this.selectUnprocessed();
+        ArrayList<UserRequest> ur = this.selectUnprocessed_BackOrder();
         for (UserRequest u : ur) {
             Product p = u.getProduct().selectSpecProduct();
             products.add(p);
