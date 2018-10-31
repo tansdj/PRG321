@@ -40,8 +40,6 @@ public class genericSort <T> implements Comparator<T>{
                     return 0;
                 }else if(Integer.parseInt(f.get(o1).toString())>Integer.parseInt(f.get(o2).toString())){
                     return -1;
-                }else{
-                    return 1;
                 }
             } catch (IllegalArgumentException | IllegalAccessException ex) {
                 Logger.getLogger(genericSort.class.getName()).log(Level.SEVERE, null, ex);

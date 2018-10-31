@@ -88,7 +88,7 @@ public class Order implements Datahandling {
 
     @Override
     public String toString() {
-        return "Order{" + "user=" + user + ", orderDate=" + orderDate + ", receivedDate=" + receivedDate + ", orderItems=" + orderItems + '}';
+        return "Order{" + "user=" + user + ", orderDate=" + orderDate + ", receivedDate=" + receivedDate+'}';
     }
 
     @Override
