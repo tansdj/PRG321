@@ -15,7 +15,6 @@ import bc_stationary_dll.TableSpecifiers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -45,6 +44,17 @@ public class Order implements Datahandling {
         this.id = id;
     }
 
+    public Order(User user, Date orderDate, Date receivedDate, ArrayList<OrderItems> orderItems) {
+        this.user = user;
+        this.orderDate = orderDate;
+        this.receivedDate = receivedDate;
+        this.orderItems = orderItems;
+    }
+
+    public Order(User user) {
+        this.user = user;
+    }
+    
     public Order() {
     }
 

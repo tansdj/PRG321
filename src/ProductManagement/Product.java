@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  */
 public class Product implements Datahandling{
     
-    private String name;
+    public String name;
     private String description;
     private Category category;
     private String status;
