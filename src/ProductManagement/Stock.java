@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 public class Stock implements Datahandling{
     
     private Product product;
-    private int quantity;
+    public int quantity;
 
     public Stock(Product product, int quantity) {
         this.product = product;
@@ -57,6 +57,14 @@ public class Stock implements Datahandling{
     public String reportToString()
     {
         String returnString = String.format("Stock for product %1$s is: %2$10d",
+                product.getName(),
+                quantity);
+        return returnString;
+    }
+    
+    public String purchaseOrderToString()
+    {
+        String returnString = String.format("Product Name: %1$s /n Requesting: %2$10d amount of items",
                 product.getName(),
                 quantity);
         return returnString;
