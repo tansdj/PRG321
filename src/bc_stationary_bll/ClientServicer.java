@@ -22,6 +22,8 @@ import java.util.logging.Logger;
  * @author Tanya
  */
 public class ClientServicer implements Runnable{
+    
+    
 
     private Socket client;
 
@@ -335,15 +337,21 @@ public class ClientServicer implements Runnable{
                     oos.writeObject(result);
                     break;                    
             }
-//            ois.close();
-//            oos.flush();
-//            oos.close();
         } catch (IOException ex) {
             Logger.getLogger(ClientServicer.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ClientServicer.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(ClientServicer.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+//            try {
+//                oos.flush();
+//                oos.close();
+//                ois.close();
+//                client.close();
+//            } catch (IOException ex) {
+//                Logger.getLogger(ClientServicer.class.getName()).log(Level.SEVERE, null, ex);
+//            }
         }
     }
     
