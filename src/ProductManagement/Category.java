@@ -71,7 +71,7 @@ public class Category implements Datahandling{
     @Override
     public ArrayList<Category> select() {
         ArrayList<Category> cats = new ArrayList<Category>();
-        Datahandler dh =  new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             ResultSet rs = dh.selectQuery(TableSpecifiers.CATEGORY.getTable());
             while(rs.next()){
@@ -90,7 +90,7 @@ public class Category implements Datahandling{
 
     @Override
     public synchronized int delete() {
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performDelete(TableSpecifiers.CATEGORY.getTable(), "`CatDescription` = '"+this.getDescription()+"'");
         } catch (SQLException ex) {
@@ -102,7 +102,7 @@ public class Category implements Datahandling{
     @Override
     public synchronized int insert() {
         String[][] depVals = new String[][]{{"STRING","CatDescription",this.getDescription()}};
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performInsert(TableSpecifiers.CATEGORY.getTable(), depVals);
         } catch (SQLException ex) {

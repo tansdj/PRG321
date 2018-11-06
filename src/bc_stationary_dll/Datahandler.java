@@ -18,16 +18,18 @@ import java.util.logging.Logger;
  * @author Tanya
  */
 public class Datahandler {
+    
+    public static Datahandler dataInstance = new Datahandler();
 
     Connection cn;
 
-    public Datahandler() {//Connect once when class is instantiated.
+    private Datahandler() {//Connect once when class is instantiated.
         connect();
     }
     
     
 
-    public final void connect() {
+    private final void connect() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bc_stationary","root","");

@@ -95,7 +95,7 @@ public class OrderItems {
             {"INT", "ProductIDFK", "(SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '" + this.getProduct().getName() + "')"},
             {"INT", "ItemQty", Integer.toString(this.qty)}};
         
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         return dh.performInsert(TableSpecifiers.ORDER_ITEMS.getTable(), itemVals);
 
     } 
