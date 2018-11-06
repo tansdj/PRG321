@@ -8,6 +8,7 @@ package PersonManagement;
 import bc_stationary_bll.Datahandling;
 import bc_stationary_dll.Datahandler;
 import bc_stationary_dll.TableSpecifiers;
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author Tanya
  */
-public class SecurityQuestions implements Datahandling{
+public class SecurityQuestions implements Datahandling,Serializable{
     
     private String question;
 

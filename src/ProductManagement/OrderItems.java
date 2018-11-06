@@ -8,6 +8,7 @@ package ProductManagement;
 import PersonManagement.User;
 import bc_stationary_dll.Datahandler;
 import bc_stationary_dll.TableSpecifiers;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
  *
  * @author Tanya
  */
-public class OrderItems {
+public class OrderItems implements Serializable{
     
     private Product product;
     private int qty;

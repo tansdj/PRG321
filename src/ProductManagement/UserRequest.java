@@ -11,6 +11,7 @@ import bc_stationary_bll.Datahandling;
 import bc_stationary_dll.Datahandler;
 import bc_stationary_dll.Datahelper;
 import bc_stationary_dll.TableSpecifiers;
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -24,7 +25,7 @@ import java.util.logging.Logger;
  *
  * @author Tanya
  */
-public class UserRequest implements Datahandling {
+public class UserRequest implements Datahandling, Serializable {
 
     private User user;
     private Product product;
@@ -50,6 +51,11 @@ public class UserRequest implements Datahandling {
     public UserRequest(User user) {
         this.user = user;
     }
+
+    public UserRequest(Product product) {
+        this.product = product;
+    }
+    
 
     public Date getCompletedDate() {
         return completedDate;

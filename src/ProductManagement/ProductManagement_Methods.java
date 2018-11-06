@@ -43,11 +43,8 @@ public enum ProductManagement_Methods {
     UR_INSERT(55),
     UR_DELETE(56);
     
-    private int methodIdentifier;
+    public int methodIdentifier;
 
-    public void setMethodIdentifier(int methodIdentifier) {
-        this.methodIdentifier = methodIdentifier;
-    }
 
     private ProductManagement_Methods(int methodIdentifier) {
         this.methodIdentifier = methodIdentifier;

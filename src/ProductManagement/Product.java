@@ -9,6 +9,7 @@ import bc_stationary_bll.Datahandling;
 import bc_stationary_dll.Datahandler;
 import bc_stationary_dll.Datahelper;
 import bc_stationary_dll.TableSpecifiers;
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,7 +22,7 @@ import java.util.logging.Logger;
  *
  * @author Tanya
  */
-public class Product implements Datahandling{
+public class Product implements Datahandling, Serializable{
     
     public String name;
     private String description;
