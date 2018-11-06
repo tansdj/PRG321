@@ -146,7 +146,7 @@ public class User implements Datahandling,Serializable{
     @Override
     public ArrayList<User> select() {
         ArrayList<User> users = new ArrayList<User>();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try 
         {
             ResultSet rs = dh.selectQuerySpec(Datahelper.selectUser);
@@ -165,7 +165,7 @@ public class User implements Datahandling,Serializable{
     
     public ArrayList<User> selectPending(){
         ArrayList<User> users = new ArrayList<User>();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             ResultSet rs = dh.selectQuerySpec(Datahelper.pendingUser);
             while(rs.next()){
@@ -183,7 +183,7 @@ public class User implements Datahandling,Serializable{
     
     public User selectSpecUser(){
         User user = new User();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             ResultSet rs = dh.selectQuerySpec(Datahelper.specificUser(this.username));
             while(rs.next()){
@@ -204,7 +204,7 @@ public class User implements Datahandling,Serializable{
        String encryptedPassword = encryptPassword(this.password);
        String[][] userVals = new String[][]{{"STRING","Password",encryptedPassword},{"STRING","AccessLevel",this.getAccessLevel()},
        {"STRING","Status",this.getStatus()}};
-       Datahandler dh = new Datahandler();
+       Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performUpdate(TableSpecifiers.USER.getTable(), userVals, "`Username` = '"+this.getUsername()+"'");
         } catch (SQLException ex) {
@@ -215,7 +215,7 @@ public class User implements Datahandling,Serializable{
 
     @Override
     public synchronized int delete() {
-       Datahandler dh = new Datahandler();
+       Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performDelete(TableSpecifiers.USER.getTable(),"`Username` = '"+this.getUsername()+"'");
         } catch (SQLException ex) {
@@ -229,7 +229,7 @@ public class User implements Datahandling,Serializable{
         String encryptedPassword = encryptPassword(this.password);
         String[][] userVals = new String[][]{{"INT","PersonIDFK","(SELECT `PersonIDPK` FROM `tblperson` WHERE `IDNumber` = '"+this.person.getId()+"')"},{"STRING","Username",this.getUsername()},{"STRING","Password",encryptedPassword}
                 ,{"STRING","AccessLevel",this.getAccessLevel()},{"STRING","Status",this.getStatus()}};
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performInsert(TableSpecifiers.USER.getTable(), userVals);
         } catch (SQLException ex) {
