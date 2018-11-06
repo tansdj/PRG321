@@ -75,7 +75,7 @@ public class Department implements Datahandling,Serializable{
     public ArrayList<Department> select() {
         ArrayList<Department> deps = new ArrayList<Department>();
         try {
-            Datahandler dh = new Datahandler();
+            Datahandler dh = Datahandler.dataInstance;
             ResultSet rs = dh.selectQuery(TableSpecifiers.DEPARTMENT.getTable());
             try {
                 while(rs.next()){
@@ -100,7 +100,7 @@ public class Department implements Datahandling,Serializable{
 
     @Override
     public int delete() {
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performDelete(TableSpecifiers.DEPARTMENT.getTable(), "`DepName` = '"+this.name+"'");
         } catch (SQLException ex) {
@@ -112,7 +112,7 @@ public class Department implements Datahandling,Serializable{
     @Override
     public int insert() {
         String[][] colValues = new String[][]{{"STRING","DepName",this.getName()}};
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performInsert(TableSpecifiers.DEPARTMENT.getTable(), colValues);
         } catch (SQLException ex) {

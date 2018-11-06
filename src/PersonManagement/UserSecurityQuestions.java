@@ -106,7 +106,7 @@ public class UserSecurityQuestions implements Datahandling,Serializable{
     @Override
     public ArrayList<UserSecurityQuestions> select() {
         ArrayList<UserSecurityQuestions> questions = new ArrayList<UserSecurityQuestions>();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             ResultSet rs = dh.selectQuerySpec(Datahelper.selectUQuestions);
             while(rs.next()){
@@ -121,7 +121,7 @@ public class UserSecurityQuestions implements Datahandling,Serializable{
     
     public UserSecurityQuestions selectSpecUserQuestions(){
         UserSecurityQuestions questions = new UserSecurityQuestions();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             ResultSet rs = dh.selectQuerySpec(Datahelper.specificUQuestions(this.getUser().getUsername()));
             while(rs.next()){
@@ -137,7 +137,7 @@ public class UserSecurityQuestions implements Datahandling,Serializable{
     @Override
     public synchronized int update() {
         String[][] qVals = new String[][]{{"STRING","Answer",this.getAnswer()}};
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performUpdate(TableSpecifiers.USER_QUESTIONS.getTable(), qVals,"(`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.getUser().getUsername()+"')) "
                                                                 + "AND (`QuestionIDFK` = (SELECT `QuestionIDPK` FROM `tblsecurityquestions` WHERE `Question` = '"+this.getQuestion().getQuestion()+"'))");
@@ -149,7 +149,7 @@ public class UserSecurityQuestions implements Datahandling,Serializable{
 
     @Override
     public synchronized int delete() {
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performDelete(TableSpecifiers.USER_QUESTIONS.getTable(), "`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '"+this.getUser().getUsername()+"') "
                     + "AND `QuestionIDFK` = (SELECT `QuestionIDPK` FROM `tblsecurityquestions` WHERE `Question` = '"+this.getQuestion().getQuestion()+"')");
@@ -161,7 +161,7 @@ public class UserSecurityQuestions implements Datahandling,Serializable{
 
     @Override
     public synchronized int insert() {
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         int question = 0;
         int user = 0;
         try {

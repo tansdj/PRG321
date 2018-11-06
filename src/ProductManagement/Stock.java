@@ -103,7 +103,7 @@ public class Stock implements Datahandling, Serializable{
     @Override
     public ArrayList<Stock> select() {
         ArrayList<Stock> stock = new ArrayList<Stock>();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             ResultSet rs = dh.selectQuerySpec(Datahelper.selectStock);
             while(rs.next()){
@@ -118,7 +118,7 @@ public class Stock implements Datahandling, Serializable{
     
     public Stock selectSpecStock(){
         Stock stock = new Stock();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             ResultSet rs = dh.selectQuerySpec(Datahelper.specificStock(this.getProduct().getName()));
             while(rs.next()){
@@ -134,7 +134,7 @@ public class Stock implements Datahandling, Serializable{
     @Override
     public synchronized int update() {
        String[][] stock = new String[][]{{"INT","Quantity",Integer.toString(this.quantity)}};
-       Datahandler dh = new Datahandler();
+       Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performUpdate(TableSpecifiers.STOCK.getTable(), stock, "`ProductIDFK` = (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')");
         } catch (SQLException ex) {
@@ -145,7 +145,7 @@ public class Stock implements Datahandling, Serializable{
 
     @Override
     public synchronized int delete() {
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performDelete(TableSpecifiers.STOCK.getTable(), "`ProductIDFK` = (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')");
         } catch (SQLException ex) {
@@ -157,7 +157,7 @@ public class Stock implements Datahandling, Serializable{
     @Override
     public synchronized int insert() {
         String[][] stock = new String[][]{{"INT","ProductIDFK"," (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '"+this.product.getName()+"')"},{"INT","Quantity",Integer.toString(this.quantity)}};
-       Datahandler dh = new Datahandler();
+       Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performInsert(TableSpecifiers.STOCK.getTable(), stock);
         } catch (SQLException ex) {

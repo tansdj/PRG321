@@ -172,7 +172,7 @@ public class Product implements Datahandling, Serializable{
     @Override
     public ArrayList<Product> select() {
         ArrayList<Product> prods = new ArrayList<Product>();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         ResultSet rs;
         try {
             rs = dh.selectQuerySpec(Datahelper.selectProducts);
@@ -188,7 +188,7 @@ public class Product implements Datahandling, Serializable{
 
     public Product selectSpecProduct(){
         Product prod = new Product();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         ResultSet rs;
         try {
             rs = dh.selectQuerySpec(Datahelper.specificProduct(this.name));
@@ -207,7 +207,7 @@ public class Product implements Datahandling, Serializable{
         String[][] prodVals = new String[][]{{"STRING","Description",this.description},{"INT","CategoryIDFK"," (SELECT `CategoryIDPK` FROM `tblcategory` WHERE `CatDescription` = '"+this.category.getDescription()+"')"},
                                             {"STRING","Status",this.status},{"INT","ModelIDFK"," (SELECT `ModelIDPK` FROM `tblmodel` WHERE `ModDescription` = '"+this.model.getDescription()+"')"},
                                             {"DOUBLE","CostPrice",Double.toString(this.costPrice)},{"DOUBLE","SalesPrice",Double.toString(this.salesPrice)},{"DATE","EntryDate",this.entryDate.toString()}};
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
            return dh.performUpdate(TableSpecifiers.PRODUCT.getTable(), prodVals, "`Name` = '"+this.name+"'");
         } catch (SQLException ex) {
@@ -218,7 +218,7 @@ public class Product implements Datahandling, Serializable{
 
     @Override
     public synchronized int delete() {
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performDelete(TableSpecifiers.PRODUCT.getTable(), "`Name` = '"+this.name+"'");
         } catch (SQLException ex) {
@@ -232,7 +232,7 @@ public class Product implements Datahandling, Serializable{
         String[][] prodVals = new String[][]{{"STRING","Name",this.name},{"STRING","Description",this.description},{"INT","CategoryIDFK"," (SELECT `CategoryIDPK` FROM `tblcategory` WHERE `CatDescription` = '"+this.category.getDescription()+"')"},
                                             {"STRING","Status",this.status},{"INT","ModelIDFK"," (SELECT `ModelIDPK` FROM `tblmodel` WHERE `ModDescription` = '"+this.model.getDescription()+"')"},
                                             {"DOUBLE","CostPrice",Double.toString(this.costPrice)},{"DOUBLE","SalesPrice",Double.toString(this.salesPrice)},{"DATE","EntryDate",this.entryDate.toString()}};
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performInsert(TableSpecifiers.PRODUCT.getTable(), prodVals);
         } catch (SQLException ex) {

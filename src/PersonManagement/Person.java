@@ -163,7 +163,7 @@ public class Person implements Datahandling,Serializable{
     @Override
     public ArrayList<Person> select() {
         ArrayList<Person> person = new ArrayList<Person>();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             ResultSet rs = dh.selectQuerySpec(Datahelper.selectPerson);
             while(rs.next()){
@@ -180,7 +180,7 @@ public class Person implements Datahandling,Serializable{
 
     public Person selectSpecPerson() throws SQLException{
         Person person = new Person();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         ResultSet rs = dh.selectQuerySpec(Datahelper.specificPerson(this.id));
         try {
             while(rs.next()){
@@ -204,7 +204,7 @@ public class Person implements Datahandling,Serializable{
                 {"STRING","City",this.address.getCity()},{"STRING","PostalCode",this.address.getPostalCode()}};
             String[][] contactValues = new String[][]{{"STRING","Cell",this.contact.getCell()},{"STRING","Email",this.contact.getEmail()}};
             
-            Datahandler dh = new Datahandler();
+            Datahandler dh = Datahandler.dataInstance;
             int p = dh.performUpdate(TableSpecifiers.PERSON.getTable(), personValues, "`IDNumber` = '"+this.id+"'");
             int a = dh.performUpdate(TableSpecifiers.ADDRESS.getTable(), addressValues, "`AddressIDPK` = (SELECT `AddressIDFK` FROM `tblPerson` WHERE `IDNumber` = '"+this.id+"')");
             int c = dh.performUpdate(TableSpecifiers.CONTACT.getTable(), contactValues, "`ContactIDPK` = (SELECT `ContactIDFK` FROM `tblPerson` WHERE `IDNumber` = '"+this.id+"')");
@@ -222,7 +222,7 @@ public class Person implements Datahandling,Serializable{
 
     @Override
     public synchronized int delete() {
-       Datahandler dh = new Datahandler();
+       Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performDelete(TableSpecifiers.PERSON.getTable(), "`IDNumber` = '"+this.id+"'");
         } catch (SQLException ex) {
@@ -234,7 +234,7 @@ public class Person implements Datahandling,Serializable{
     @Override
     public synchronized int insert() {
         try {
-            Datahandler dh = new Datahandler();
+            Datahandler dh = Datahandler.dataInstance;
             
             String[][] addressValues = new String[][]{{"STRING","Line1",this.address.getLine1()},{"STRING","Line2",this.address.getLine2()},
                 {"STRING","City",this.address.getCity()},{"STRING","PostalCode",this.address.getPostalCode()}};

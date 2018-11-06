@@ -186,7 +186,7 @@ public class UserRequest implements Datahandling, Serializable {
     @Override
     public ArrayList<UserRequest> select() {
         ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         ResultSet rs;
         try {
             rs = dh.selectQuerySpec(Datahelper.selectRequest);
@@ -202,7 +202,7 @@ public class UserRequest implements Datahandling, Serializable {
 
     public ArrayList<UserRequest> selectUnprocessed_ProductBackOrder() {
         ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         ResultSet rs;
         try {
             rs = dh.selectQuerySpec(Datahelper.selectUnprocessed_BackOrderRequests);
@@ -218,7 +218,7 @@ public class UserRequest implements Datahandling, Serializable {
 
     public ArrayList<UserRequest> selectUnprocessed_Product_BackOrder() {
         ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         ResultSet rs;
         try {
             rs = dh.selectQuerySpec(Datahelper.selectUnprocessed_BackOrderRequests);
@@ -236,7 +236,7 @@ public class UserRequest implements Datahandling, Serializable {
     
     public ArrayList<UserRequest> selectSpecUserRequest() {
         ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         ResultSet rs;
         try {
             rs = dh.selectQuerySpec(Datahelper.selectSpecUserRequest(this.user.getUsername()));
@@ -263,7 +263,7 @@ public class UserRequest implements Datahandling, Serializable {
     @Override
     public synchronized int update() {
         String[][] reqVals = new String[][]{{"INT", "Quantity", Integer.toString(this.quantity)}, {"INT", "Priority", Integer.toString(this.priorityLevel)}, {"STRING", "ReqStatus", this.status}, {"DATE", "DateCompleted", this.completedDate.toString()}};
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performUpdate(TableSpecifiers.REQUEST.getTable(), reqVals, "`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '" + this.user.getUsername() + "') "
                     + "AND `ProductIDFK` = (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '" + this.product.getName() + "')");
@@ -275,7 +275,7 @@ public class UserRequest implements Datahandling, Serializable {
 
     @Override
     public synchronized int delete() {
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performDelete(TableSpecifiers.REQUEST.getTable(), "`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '" + this.user.getUsername() + "') "
                     + "AND `ProductIDFK` = (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '" + this.product.getName() + "')");
@@ -291,7 +291,7 @@ public class UserRequest implements Datahandling, Serializable {
         {"INT", "ProductIDFK", "(SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '" + this.product.getName() + "')"},
         {"INT", "Quantity", Integer.toString(this.quantity)}, {"INT", "Priority", Integer.toString(this.priorityLevel)}, {"STRING", "ReqStatus", this.status},
         {"DATE", "ReqDate", this.reqDate.toString()}, {"DATE", "DateCompleted", this.completedDate.toString()}};
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performInsert(TableSpecifiers.REQUEST.getTable(), reqVals);
         } catch (SQLException ex) {

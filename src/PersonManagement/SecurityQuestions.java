@@ -73,7 +73,7 @@ public class SecurityQuestions implements Datahandling,Serializable{
     public ArrayList<SecurityQuestions> select() {
         ArrayList<SecurityQuestions> questions = new ArrayList<SecurityQuestions>();
         try {
-            Datahandler dh = new Datahandler();
+            Datahandler dh = Datahandler.dataInstance;
             ResultSet rs = dh.selectQuery(TableSpecifiers.SEQURITY_QUESTIONS.getTable());
             while(rs.next()){
                 questions.add(new SecurityQuestions(rs.getString("Question")));
@@ -87,7 +87,7 @@ public class SecurityQuestions implements Datahandling,Serializable{
     @Override
     public synchronized int update() {
         String[][] questions = new String[][]{{"STRING","Question",this.getQuestion()}};
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performUpdate(TableSpecifiers.SEQURITY_QUESTIONS.getTable(), questions,
                 "`QuestionIDPK` = (SELECT `QuestionIDPK` FROM `"+TableSpecifiers.SEQURITY_QUESTIONS.getTable()+
@@ -100,7 +100,7 @@ public class SecurityQuestions implements Datahandling,Serializable{
 
     @Override
     public synchronized int delete() {
-       Datahandler dh = new Datahandler();
+       Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performDelete(TableSpecifiers.SEQURITY_QUESTIONS.getTable(), "`Question` = '"+this.getQuestion()+"'");
         } catch (SQLException ex) {
@@ -112,7 +112,7 @@ public class SecurityQuestions implements Datahandling,Serializable{
     @Override
     public synchronized int insert() {
         String[][] questions = new String[][]{{"STRING","Question",this.getQuestion()}};
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performInsert(TableSpecifiers.SEQURITY_QUESTIONS.getTable(), questions);
         } catch (SQLException ex) {

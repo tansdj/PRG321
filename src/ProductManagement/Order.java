@@ -132,7 +132,7 @@ public class Order implements Datahandling, Serializable {
     @Override
     public ArrayList<Order> select() {
         ArrayList<Order> orders = new ArrayList<Order>();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         ResultSet rs;
         try {
             rs = dh.selectQuerySpec(Datahelper.selectOrders);
@@ -153,7 +153,7 @@ public class Order implements Datahandling, Serializable {
 
     public ArrayList<Order> selectUserOrders() {
         ArrayList<Order> orders = new ArrayList<Order>();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         ResultSet rs;
         try {
             rs = dh.selectQuerySpec(Datahelper.specificUserOrders(this.user.getUsername(), this.orderDate, this.receivedDate));
@@ -174,7 +174,7 @@ public class Order implements Datahandling, Serializable {
     
     public Order selectUserOpenOrder(){
         Order o = null;
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         ResultSet rs;
         try {
             rs = dh.selectQuerySpec(Datahelper.specificUserOpenOrder(this.user.getUsername()));
@@ -191,7 +191,7 @@ public class Order implements Datahandling, Serializable {
     @Override
     public synchronized int update() {
         String[][] orderVals = new String[][]{{"DATE", "ReceivedDate", this.receivedDate.toString()}};
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             dh.performUpdate(TableSpecifiers.ORDER.getTable(), orderVals, "`OrderIDPK` = " + this.id);
         } catch (SQLException ex) {
@@ -202,7 +202,7 @@ public class Order implements Datahandling, Serializable {
 
     @Override
     public synchronized int delete() {
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             dh.performDelete(TableSpecifiers.ORDER.getTable(), "`OrderIDPK` = " + this.id);
         } catch (SQLException ex) {
@@ -221,7 +221,7 @@ public class Order implements Datahandling, Serializable {
             {"INT", "ProductIDFK", "(SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '" + i.getProduct().getName() + "')"},
             {"INT", "ItemQty", Integer.toString(i.getQty())}};
         }
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             int o = dh.performInsert(TableSpecifiers.ORDER.getTable(), orderVals);
             if (o >= 1) {

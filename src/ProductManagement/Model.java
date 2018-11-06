@@ -72,7 +72,7 @@ public class Model implements Datahandling, Serializable{
     @Override
     public ArrayList<Model> select() {
         ArrayList<Model> models = new ArrayList<Model>();
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             ResultSet rs = dh.selectQuery(TableSpecifiers.MODEL.getTable());
             while(rs.next()){
@@ -91,7 +91,7 @@ public class Model implements Datahandling, Serializable{
 
     @Override
     public synchronized int delete() {
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performDelete(TableSpecifiers.MODEL.getTable(), "`ModDescription` = '"+this.getDescription()+"'");
         } catch (SQLException ex) {
@@ -103,7 +103,7 @@ public class Model implements Datahandling, Serializable{
     @Override
     public synchronized int insert() {
         String[][] modVals = new String[][]{{"STRING","ModDescription",this.getDescription()}};
-        Datahandler dh = new Datahandler();
+        Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performInsert(TableSpecifiers.MODEL.getTable(), modVals);
         } catch (SQLException ex) {
