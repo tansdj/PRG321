@@ -56,7 +56,7 @@ public class Stock implements Datahandling{
     
     public String reportToString()
     {
-        String returnString = String.format("Stock for product %1$s is: %2$10d",
+        String returnString = String.format("%s%55d",
                 product.getName(),
                 quantity);
         return returnString;
@@ -64,7 +64,7 @@ public class Stock implements Datahandling{
     
     public String purchaseOrderToString()
     {
-        String returnString = String.format("Product Name: %1$s /n Requesting: %2$10d amount of items",
+        String returnString = String.format("%s%55d",
                 product.getName(),
                 quantity);
         return returnString;
