@@ -56,7 +56,7 @@ public class Datahelper {
     }
     
     public static String selectOrderItems(int orderId){
-        return "SELECT * FROM `tblorderitems` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDFK` WHERE `OrderIDFK` = "+orderId;
+        return "SELECT * FROM `tblorderitems` INNER JOIN `tblproduct` ON `ProductIDPK` = `ProductIDFK` WHERE `OrderIDFK` = "+orderId;
     }
     
     public static String selectOrders = "SELECT * FROM `tblorder` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK`";
@@ -67,6 +67,10 @@ public class Datahelper {
     
     public static String specificUserOpenOrder(String username){
         return "SELECT * FROM `tblorder` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` WHERE `Username` = '"+username+"' AND `OrderDate`>`ReceivedDate` ORDER BY `OrderIDPK` DESC LIMIT 1";
+    }
+    
+    public static String specificUserWithOpenOrder(){
+        return "SELECT * FROM `tblorder` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` INNER JOIN `tblPerson` ON `PersonIDPK` = `PersonIDFK` WHERE `OrderDate`>`ReceivedDate` ORDER BY `OrderIDPK`";
     }
     
 }

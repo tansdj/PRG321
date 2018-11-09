@@ -5,9 +5,13 @@
  */
 package ProductManagement;
 
+import PersonManagement.Address;
+import PersonManagement.Contact;
+import PersonManagement.Department;
 import PersonManagement.Person;
 import PersonManagement.SecurityQuestions;
 import PersonManagement.User;
+import static PersonManagement.User.decryptPassword;
 import bc_stationary_bll.Datahandling;
 import bc_stationary_dll.Datahandler;
 import bc_stationary_dll.Datahelper;
@@ -179,12 +183,35 @@ public class Order implements Datahandling {
             rs = dh.selectQuerySpec(Datahelper.specificUserOpenOrder(this.user.getUsername()));
             while (rs.next()) {
                 ResultSet rs2 = dh.selectQuerySpec(Datahelper.selectOrderItems(rs.getInt("OrderIDPK")));
-                o = new Order(new User(new Person(), rs.getString("Username"), rs.getString("Password"), rs.getString("AccessLevel"), rs.getString("Status")), rs.getDate("OrderDate"), rs.getDate("ReceivedDate"), null, rs.getInt("OrderIDPK"));
+                ArrayList<OrderItems> items = new ArrayList<OrderItems>();
+                while (rs2.next()) {
+                    items.add(new OrderItems(new Product(rs2.getString("Name"), rs2.getString("Description"), new Category(), rs2.getString("Status"),
+                            new Model(), rs2.getDouble("CostPrice"), rs2.getDouble("SalesPrice"), rs2.getDate("EntryDate")), rs2.getInt("ItemQty")));
+                }
+                o = new Order(new User(new Person(), rs.getString("Username"), rs.getString("Password"), rs.getString("AccessLevel"), rs.getString("Status")), rs.getDate("OrderDate"), rs.getDate("ReceivedDate"), items, rs.getInt("OrderIDPK"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
         return o;
+    }
+    
+    public ArrayList<User> selectUsersWithOpenOrder(){
+        ArrayList<User> users = new ArrayList<User>();
+        Datahandler dh = Datahandler.dataInstance;
+        ResultSet rs;
+        try {
+            rs = dh.selectQuerySpec(Datahelper.specificUserWithOpenOrder());
+            while (rs.next()) {
+                users.add(new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
+                            new Address(), new Contact(),
+                            new Department(),rs.getString("Campus")),
+                            rs.getString("Username"),decryptPassword(rs.getString("Password")),rs.getString("AccessLevel"),rs.getString("Status")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return users;
     }
 
     @Override
