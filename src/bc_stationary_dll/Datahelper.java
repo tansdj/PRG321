@@ -56,13 +56,13 @@ public class Datahelper {
     }
     
     public static String selectOrderItems(int orderId){
-        return "SELECT * FROM `tblorderitems` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDFK` WHERE `OrderIDFK` = "+orderId;
+        return "SELECT * FROM `tblorderitems` INNER JOIN `tblproduct` ON `ProductIDPK` = `ProductIDFK` WHERE `OrderIDFK` = "+orderId;
     }
     
     public static String selectOrders = "SELECT * FROM `tblorder` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK`";
     
-    public static String specificUserOrders(String username,Date startDate,Date endDate){
-        return "SELECT * FROM `tblorder` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` WHERE `Username` = '"+username+"' AND `OrderDate`>='"+startDate.toString()+"' AND `ReceivedDate`<='"+endDate.toString()+"')";
+    public static String specificUserOrders(String username){
+        return "SELECT * FROM `tblorder` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` WHERE `Username` = '"+username+"'";
     }
     
     public static String specificUserOpenOrder(String username){

@@ -5,8 +5,10 @@
  */
 package ProductManagement;
 
+import PersonManagement.Address;
+import PersonManagement.Contact;
+import PersonManagement.Department;
 import PersonManagement.Person;
-import PersonManagement.SecurityQuestions;
 import PersonManagement.User;
 import bc_stationary_bll.Datahandling;
 import bc_stationary_dll.Datahandler;
@@ -89,7 +91,7 @@ public class Order implements Datahandling, Serializable {
 
     @Override
     public String toString() {
-        return "Order{" + "user=" + user + ", orderDate=" + orderDate + ", receivedDate=" + receivedDate+'}';
+        return "Order "+id+" ( Order Date: "+orderDate+" )";
     }
 
     @Override
@@ -156,13 +158,13 @@ public class Order implements Datahandling, Serializable {
         Datahandler dh = Datahandler.dataInstance;
         ResultSet rs;
         try {
-            rs = dh.selectQuerySpec(Datahelper.specificUserOrders(this.user.getUsername(), this.orderDate, this.receivedDate));
+            rs = dh.selectQuerySpec(Datahelper.specificUserOrders(this.user.getUsername()));
             while (rs.next()) {
                 ResultSet rs2 = dh.selectQuerySpec(Datahelper.selectOrderItems(rs.getInt("OrderIDPK")));
                 ArrayList<OrderItems> items = new ArrayList<OrderItems>();
                 while (rs2.next()) {
-                    items.add(new OrderItems(new Product(rs.getString("Name"), rs.getString("Description"), new Category(), rs.getString("Status"),
-                            new Model(), rs.getDouble("CostPrice"), rs.getDouble("SalesPrice"), rs.getDate("EntryDate")), rs.getInt("ItemQty")));
+                    items.add(new OrderItems(new Product(rs2.getString("Name"), rs2.getString("Description"), new Category(), rs2.getString("Status"),
+                            new Model(), rs2.getDouble("CostPrice"), rs2.getDouble("SalesPrice"), rs2.getDate("EntryDate")), rs2.getInt("ItemQty")));
                 }
                 orders.add(new Order(new User(new Person(), rs.getString("Username"), rs.getString("Password"), rs.getString("AccessLevel"), rs.getString("Status")), rs.getDate("OrderDate"), rs.getDate("ReceivedDate"), items, rs.getInt("OrderIDPK")));
             }
@@ -172,7 +174,7 @@ public class Order implements Datahandling, Serializable {
         return orders;
     }
     
-    public Order selectUserOpenOrder(){
+     public Order selectUserOpenOrder(){
         Order o = null;
         Datahandler dh = Datahandler.dataInstance;
         ResultSet rs;
@@ -180,20 +182,25 @@ public class Order implements Datahandling, Serializable {
             rs = dh.selectQuerySpec(Datahelper.specificUserOpenOrder(this.user.getUsername()));
             while (rs.next()) {
                 ResultSet rs2 = dh.selectQuerySpec(Datahelper.selectOrderItems(rs.getInt("OrderIDPK")));
-                o = new Order(new User(new Person(), rs.getString("Username"), rs.getString("Password"), rs.getString("AccessLevel"), rs.getString("Status")), rs.getDate("OrderDate"), rs.getDate("ReceivedDate"), null, rs.getInt("OrderIDPK"));
+                ArrayList<OrderItems> items = new ArrayList<OrderItems>();
+                while (rs2.next()) {
+                    items.add(new OrderItems(new Product(rs2.getString("Name"), rs2.getString("Description"), new Category(), rs2.getString("Status"),
+                            new Model(), rs2.getDouble("CostPrice"), rs2.getDouble("SalesPrice"), rs2.getDate("EntryDate")), rs2.getInt("ItemQty")));
+                }
+                o = new Order(new User(new Person(), rs.getString("Username"), rs.getString("Password"), rs.getString("AccessLevel"), rs.getString("Status")), rs.getDate("OrderDate"), rs.getDate("ReceivedDate"), items, rs.getInt("OrderIDPK"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
         return o;
     }
-
+     
     @Override
     public synchronized int update() {
         String[][] orderVals = new String[][]{{"DATE", "ReceivedDate", this.receivedDate.toString()}};
         Datahandler dh = Datahandler.dataInstance;
         try {
-            dh.performUpdate(TableSpecifiers.ORDER.getTable(), orderVals, "`OrderIDPK` = " + this.id);
+            return dh.performUpdate(TableSpecifiers.ORDER.getTable(), orderVals, "`OrderIDPK` = " + this.id);
         } catch (SQLException ex) {
             Logger.getLogger(Order.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -204,7 +211,7 @@ public class Order implements Datahandling, Serializable {
     public synchronized int delete() {
         Datahandler dh = Datahandler.dataInstance;
         try {
-            dh.performDelete(TableSpecifiers.ORDER.getTable(), "`OrderIDPK` = " + this.id);
+            return dh.performDelete(TableSpecifiers.ORDER.getTable(), "`OrderIDPK` = " + this.id);
         } catch (SQLException ex) {
             Logger.getLogger(Order.class.getName()).log(Level.SEVERE, null, ex);
         }

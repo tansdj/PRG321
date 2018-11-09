@@ -58,7 +58,7 @@ public class OrderItems implements Serializable{
 
     @Override
     public String toString() {
-        return "OrderItems{" + "product=" + product + ", qty=" + qty + '}';
+        return this.product.getName() +" "+ this.product.getDescription() +" "+ this.qty;
     }
 
     @Override
