@@ -209,6 +209,22 @@ public class UserRequest implements Datahandling {
         }
         return uReq;
     }
+    
+    public ArrayList<UserRequest> selectRequestsAwaitingPurchase() {
+        ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
+        Datahandler dh = Datahandler.dataInstance;
+        ResultSet rs;
+        try {
+            rs = dh.selectQuerySpec(Datahelper.selectRequestsAwaitingPurchase);
+            while (rs.next()) {
+                uReq.add(new UserRequest(new User(new Person(), rs.getString("Username"), rs.getString("Password"), rs.getString("AccessLevel"), rs.getString("Status")), new Product(rs.getString("Name"), rs.getString("Description"), new Category(), rs.getString("Status"),
+                        new Model(), rs.getDouble("CostPrice"), rs.getDouble("SalesPrice"), rs.getDate("EntryDate")), rs.getInt("Quantity"), rs.getInt("Priority"), rs.getString("ReqStatus"), rs.getDate("ReqDate"), rs.getDate("DateCompleted")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return uReq;
+    }
 
     public ArrayList<UserRequest> selectUnprocessed_Product_BackOrder() {
         ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
