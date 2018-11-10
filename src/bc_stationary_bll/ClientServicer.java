@@ -345,7 +345,7 @@ public class ClientServicer implements Runnable{
                 case 58:
                     UserRequest ur9 = (UserRequest)c.requestObject;
                     result = new Communication(ur9.updateUnprocessed());
-                    oos.writeObject(ur9);
+                    oos.writeObject(result);
                     break;
             }
         } catch (IOException ex) {
