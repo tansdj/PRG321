@@ -272,6 +272,18 @@ public class UserRequest implements Datahandling, Serializable {
         }
         return -1;
     }
+    
+    public synchronized int updateUnprocessed() {
+        String[][] reqVals = new String[][]{{"INT", "Quantity", Integer.toString(this.quantity)}, {"INT", "Priority", Integer.toString(this.priorityLevel)}, {"STRING", "ReqStatus", this.status}, {"DATE", "DateCompleted", this.completedDate.toString()}};
+        Datahandler dh = Datahandler.dataInstance;
+        try {
+            return dh.performUpdate(TableSpecifiers.REQUEST.getTable(), reqVals, "`UserIDFK` = (SELECT `UserIDPK` FROM `tbluser` WHERE `Username` = '" + this.user.getUsername() + "') "
+                    + "AND `ProductIDFK` = (SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '" + this.product.getName() + "') AND `ReqStatus` = 'Unprocessed'");
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
 
     @Override
     public synchronized int delete() {
