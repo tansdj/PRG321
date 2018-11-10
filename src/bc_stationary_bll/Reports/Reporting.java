@@ -41,7 +41,7 @@ import java.util.logging.Logger;
 public class Reporting {
     
     private ArrayList<String> inputArray;
-    private String docName;
+    public String docName;
     private String name;
     private String header;
 

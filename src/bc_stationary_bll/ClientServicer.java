@@ -341,6 +341,12 @@ public class ClientServicer implements Runnable{
                     ArrayList<User> users_with_open_order = o7.selectUsersWithOpenOrder();
                     result = new Communication(users_with_open_order);
                     oos.writeObject(result);
+                    break;
+                case 58:
+                    UserRequest ur9 = (UserRequest)c.requestObject;
+                    result = new Communication(ur9.updateUnprocessed());
+                    oos.writeObject(ur9);
+                    break;
             }
         } catch (IOException ex) {
             Logger.getLogger(ClientServicer.class.getName()).log(Level.SEVERE, null, ex);
