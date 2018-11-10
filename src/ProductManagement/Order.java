@@ -213,24 +213,6 @@ public class Order implements Datahandling, Serializable {
         }
         return users;
     }
-    
-    public ArrayList<User> selectUsersWithOpenOrder(){
-        ArrayList<User> users = new ArrayList<User>();
-        Datahandler dh = Datahandler.dataInstance;
-        ResultSet rs;
-        try {
-            rs = dh.selectQuerySpec(Datahelper.specificUserWithOpenOrder());
-            while (rs.next()) {
-                users.add(new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
-                            new Address(), new Contact(),
-                            new Department(),rs.getString("Campus")),
-                            rs.getString("Username"),decryptPassword(rs.getString("Password")),rs.getString("AccessLevel"),rs.getString("Status")));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return users;
-    }
 
     @Override
     public synchronized int update() {
