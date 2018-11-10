@@ -353,6 +353,10 @@ public class ClientServicer implements Runnable{
                     result = new Communication(awaiting_purchase_requests);
                     oos.writeObject(result);
                     break;
+                case 60:
+                    UserRequest ur11 = (UserRequest)c.requestObject;
+                    result = new Communication(ur11.updateAwaitingPurchase());
+                    oos.writeObject(result);
             }
         } catch (IOException ex) {
             Logger.getLogger(ClientServicer.class.getName()).log(Level.SEVERE, null, ex);
