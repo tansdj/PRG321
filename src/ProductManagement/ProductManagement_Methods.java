@@ -41,7 +41,8 @@ public enum ProductManagement_Methods {
     UR_SELECT_PRODUCTS_ONREQ(53),
     UR_UPDATE(54),
     UR_INSERT(55),
-    UR_DELETE(56);
+    UR_DELETE(56),
+    ORDER_SELECTUSERS_WITH_OPEN_ORDERS(57);
     
     public int methodIdentifier;
 
