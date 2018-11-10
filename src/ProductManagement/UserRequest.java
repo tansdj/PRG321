@@ -120,8 +120,8 @@ public class UserRequest implements Datahandling, Serializable {
     
     public String reportToString()
     {
-        SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        String returnString = String.format("|User: %1$s | requested %2$5s x %3$d | for %4$s | priority level %5$3s | current status %6$s | request was completed on %7$2s |",
+        SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("dd/MM/yy");
+        String returnString = String.format("%1s%10s%10d%10s%15s%30s%20s",
                 user.getUsername(),
                 product.getName(),
                 quantity,

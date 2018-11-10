@@ -69,4 +69,8 @@ public class Datahelper {
         return "SELECT * FROM `tblorder` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` WHERE `Username` = '"+username+"' AND `OrderDate`>`ReceivedDate` ORDER BY `OrderIDPK` DESC LIMIT 1";
     }
     
+    public static String specificUserWithOpenOrder(){
+        return "SELECT * FROM `tblorder` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` INNER JOIN `tblPerson` ON `PersonIDPK` = `PersonIDFK` WHERE `OrderDate`>`ReceivedDate` ORDER BY `OrderIDPK`";
+    }
+    
 }
