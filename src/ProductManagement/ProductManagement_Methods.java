@@ -43,7 +43,8 @@ public enum ProductManagement_Methods {
     UR_INSERT(55),
     UR_DELETE(56),
     ORDER_SELECTUSERS_WITH_OPEN_ORDERS(57),
-    UR_UPDATE_UNPROCESSED(58);
+    UR_UPDATE_UNPROCESSED(58),
+    UR_AWAITING_PURCHASE(59);
     
     private int methodIdentifier;
 
