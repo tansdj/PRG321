@@ -347,6 +347,16 @@ public class ClientServicer implements Runnable{
                     result = new Communication(ur9.updateUnprocessed());
                     oos.writeObject(result);
                     break;
+                case 59:
+                    UserRequest ur10 = (UserRequest)c.requestObject;
+                    ArrayList<UserRequest> awaiting_purchase_requests = ur10.selectRequestsAwaitingPurchase();
+                    result = new Communication(awaiting_purchase_requests);
+                    oos.writeObject(result);
+                    break;
+                case 60:
+                    UserRequest ur11 = (UserRequest)c.requestObject;
+                    result = new Communication(ur11.updateAwaitingPurchase());
+                    oos.writeObject(result);
             }
         } catch (IOException ex) {
             Logger.getLogger(ClientServicer.class.getName()).log(Level.SEVERE, null, ex);

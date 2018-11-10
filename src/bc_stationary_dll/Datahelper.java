@@ -49,6 +49,8 @@ public class Datahelper {
     
     public static String selectUnprocessedRequests = "SELECT * FROM `tbluserrequest` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDPK` WHERE `ReqStatus` = 'Unprocessed'";
     
+    public static String selectRequestsAwaitingPurchase = "SELECT * FROM `tbluserrequest` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDPK` WHERE `ReqStatus` = 'Awaiting Purchase'";
+    
     public static String selectUnprocessed_BackOrderRequests = "SELECT * FROM `tbluserrequest` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDPK` WHERE `ReqStatus` = 'Unprocessed' OR `ReqStatus` = 'Back Ordered'";
     
     public static String selectSpecUserRequest(String username){
