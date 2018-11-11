@@ -56,7 +56,7 @@ public class OrderItems implements Serializable{
 
     @Override
     public String toString() {
-        return String.format("%S            %S              %d",this.product.getName(),this.product.getDescription(),this.qty);
+        return String.format("%S                    %S                          %d",this.product.getName(),this.product.getDescription(),this.qty);
     }
 
     public String orderItemsToString()
