@@ -20,18 +20,22 @@ import java.util.logging.Logger;
 public class BC_Stationary_Server {
 
     /**
-     * @param args the command line arguments
+     * @param args the command line arguments The Server Main class is run first
+     * and allows clients to connect. The connect client is then serviced via
+     * the ClientServicer Thread, that translates request and responds with the
+     * correct objects needed by the client.
      */
     public static void main(String[] args) throws UnknownHostException {
         InetAddress inet = InetAddress.getByName("127.0.0.1");
-        try(ServerSocket ss = new ServerSocket(5000,10,inet)){
-            while(true){
-            Socket s = ss.accept();
-            Thread clientThread = new Thread(new ClientServicer(s));
-            clientThread.start();}
+        try (ServerSocket ss = new ServerSocket(5000, 10, inet)) {
+            while (true) {
+                Socket s = ss.accept();
+                Thread clientThread = new Thread(new ClientServicer(s));
+                clientThread.start();
+            }
         } catch (IOException ex) {
             Logger.getLogger(BC_Stationary_Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
 }

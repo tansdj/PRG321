@@ -9,11 +9,16 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Tanya
+ * @author Tanya This interface enforces all bll classes to implement the basic
+ * CRUD operations needed to maintain data in the database.
  */
 public interface Datahandling {
+
     ArrayList<?> select();
+
     int update();
+
     int delete();
+
     int insert();
 }

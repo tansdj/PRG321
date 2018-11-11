@@ -19,10 +19,12 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Tanya
+ * @author Tanya 
+ * Is used to represent and maintain a person object in the
+ * database.
  */
-public class Person implements Datahandling,Serializable{
-    
+public class Person implements Datahandling, Serializable {
+
     private String name;
     private String surname;
     private String id;
@@ -49,13 +51,13 @@ public class Person implements Datahandling,Serializable{
 
     public Person() {
     }
-    
+
     public String getCampus() {
         return campus;
     }
 
     public void setCampus(String campus) {
-        this.campus = (campus.equals(""))?"N.A":campus;
+        this.campus = (campus.equals("")) ? "N.A" : campus;
     }
 
     public Department getDepartment() {
@@ -63,7 +65,7 @@ public class Person implements Datahandling,Serializable{
     }
 
     public void setDepartment(Department department) {
-        this.department = (department==null)?new Department():department;
+        this.department = (department == null) ? new Department() : department;
     }
 
     public Contact getContact() {
@@ -71,7 +73,7 @@ public class Person implements Datahandling,Serializable{
     }
 
     public void setContact(Contact contact) {
-        this.contact = (contact==null)?new Contact():contact;
+        this.contact = (contact == null) ? new Contact() : contact;
     }
 
     public Address getAddress() {
@@ -79,7 +81,7 @@ public class Person implements Datahandling,Serializable{
     }
 
     public void setAddress(Address address) {
-        this.address = (address==null)?new Address():address;
+        this.address = (address == null) ? new Address() : address;
     }
 
     public String getId() {
@@ -87,7 +89,7 @@ public class Person implements Datahandling,Serializable{
     }
 
     public void setId(String id) {
-        this.id = (id.equals(""))?"N.A":id;
+        this.id = (id.equals("")) ? "N.A" : id;
     }
 
     public String getSurname() {
@@ -95,7 +97,7 @@ public class Person implements Datahandling,Serializable{
     }
 
     public void setSurname(String surname) {
-        this.surname = (surname.equals(""))?"N.A":surname;
+        this.surname = (surname.equals("")) ? "N.A" : surname;
     }
 
     public String getName() {
@@ -103,12 +105,12 @@ public class Person implements Datahandling,Serializable{
     }
 
     public void setName(String name) {
-        this.name = (name.equals(""))?"N.A":name;
+        this.name = (name.equals("")) ? "N.A" : name;
     }
 
     @Override
     public String toString() {
-        return name+" "+surname;
+        return name + " " + surname;
     }
 
     @Override
@@ -166,11 +168,11 @@ public class Person implements Datahandling,Serializable{
         Datahandler dh = Datahandler.dataInstance;
         try {
             ResultSet rs = dh.selectQuerySpec(Datahelper.selectPerson);
-            while(rs.next()){
-                person.add(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
-                        new Address(rs.getString("Line1"),rs.getString("Line2"),rs.getString("City"),rs.getString("PostalCode")),
-                        new Contact(rs.getString("Cell"),rs.getString("Email")),
-                        new Department(rs.getString("DepName")),rs.getString("Campus")));
+            while (rs.next()) {
+                person.add(new Person(rs.getString("Name"), rs.getString("Surname"), rs.getString("IDNumber"),
+                        new Address(rs.getString("Line1"), rs.getString("Line2"), rs.getString("City"), rs.getString("PostalCode")),
+                        new Contact(rs.getString("Cell"), rs.getString("Email")),
+                        new Department(rs.getString("DepName")), rs.getString("Campus")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
@@ -178,40 +180,41 @@ public class Person implements Datahandling,Serializable{
         return person;
     }
 
-    public Person selectSpecPerson() throws SQLException{
+    //Returns a specific, complete person object based on its ID Number.
+    public Person selectSpecPerson() throws SQLException {
         Person person = new Person();
         Datahandler dh = Datahandler.dataInstance;
         ResultSet rs = dh.selectQuerySpec(Datahelper.specificPerson(this.id));
         try {
-            while(rs.next()){
-                person = (new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
-                        new Address(rs.getString("Line1"),rs.getString("Line2"),rs.getString("City"),rs.getString("PostalCode")),
-                        new Contact(rs.getString("Cell"),rs.getString("Email")),
-                        new Department(rs.getString("DepName")),rs.getString("Campus")));
+            while (rs.next()) {
+                person = (new Person(rs.getString("Name"), rs.getString("Surname"), rs.getString("IDNumber"),
+                        new Address(rs.getString("Line1"), rs.getString("Line2"), rs.getString("City"), rs.getString("PostalCode")),
+                        new Contact(rs.getString("Cell"), rs.getString("Email")),
+                        new Department(rs.getString("DepName")), rs.getString("Campus")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
         }
         return person;
     }
-    
+
     @Override
     public synchronized int update() {
         try {
-            String[][] personValues = new String[][]{{"STRING","Name",this.name},{"STRING","Surname",this.surname},
-                {"INT","DepIDFK","(SELECT `DepartmentIDPK` FROM `tbldepartment` WHERE `DepName` = '"+this.department.getName()+"')"},{"STRING","Campus",this.campus}};
-            String[][] addressValues = new String[][]{{"STRING","Line1",this.address.getLine1()},{"STRING","Line2",this.address.getLine2()},
-                {"STRING","City",this.address.getCity()},{"STRING","PostalCode",this.address.getPostalCode()}};
-            String[][] contactValues = new String[][]{{"STRING","Cell",this.contact.getCell()},{"STRING","Email",this.contact.getEmail()}};
-            
+            String[][] personValues = new String[][]{{"STRING", "Name", this.name}, {"STRING", "Surname", this.surname},
+            {"INT", "DepIDFK", "(SELECT `DepartmentIDPK` FROM `tbldepartment` WHERE `DepName` = '" + this.department.getName() + "')"}, {"STRING", "Campus", this.campus}};
+            String[][] addressValues = new String[][]{{"STRING", "Line1", this.address.getLine1()}, {"STRING", "Line2", this.address.getLine2()},
+            {"STRING", "City", this.address.getCity()}, {"STRING", "PostalCode", this.address.getPostalCode()}};
+            String[][] contactValues = new String[][]{{"STRING", "Cell", this.contact.getCell()}, {"STRING", "Email", this.contact.getEmail()}};
+
             Datahandler dh = Datahandler.dataInstance;
-            int p = dh.performUpdate(TableSpecifiers.PERSON.getTable(), personValues, "`IDNumber` = '"+this.id+"'");
-            int a = dh.performUpdate(TableSpecifiers.ADDRESS.getTable(), addressValues, "`AddressIDPK` = (SELECT `AddressIDFK` FROM `tblPerson` WHERE `IDNumber` = '"+this.id+"')");
-            int c = dh.performUpdate(TableSpecifiers.CONTACT.getTable(), contactValues, "`ContactIDPK` = (SELECT `ContactIDFK` FROM `tblPerson` WHERE `IDNumber` = '"+this.id+"')");
-            
-            if((p>0)&&(a>0)&&(c>0)){
+            int p = dh.performUpdate(TableSpecifiers.PERSON.getTable(), personValues, "`IDNumber` = '" + this.id + "'");
+            int a = dh.performUpdate(TableSpecifiers.ADDRESS.getTable(), addressValues, "`AddressIDPK` = (SELECT `AddressIDFK` FROM `tblPerson` WHERE `IDNumber` = '" + this.id + "')");
+            int c = dh.performUpdate(TableSpecifiers.CONTACT.getTable(), contactValues, "`ContactIDPK` = (SELECT `ContactIDFK` FROM `tblPerson` WHERE `IDNumber` = '" + this.id + "')");
+
+            if ((p > 0) && (a > 0) && (c > 0)) {
                 return 1;
-            }else{
+            } else {
                 return 0;
             }
         } catch (SQLException ex) {
@@ -222,9 +225,9 @@ public class Person implements Datahandling,Serializable{
 
     @Override
     public synchronized int delete() {
-       Datahandler dh = Datahandler.dataInstance;
+        Datahandler dh = Datahandler.dataInstance;
         try {
-            return dh.performDelete(TableSpecifiers.PERSON.getTable(), "`IDNumber` = '"+this.id+"'");
+            return dh.performDelete(TableSpecifiers.PERSON.getTable(), "`IDNumber` = '" + this.id + "'");
         } catch (SQLException ex) {
             Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -235,24 +238,22 @@ public class Person implements Datahandling,Serializable{
     public synchronized int insert() {
         try {
             Datahandler dh = Datahandler.dataInstance;
-            
-            String[][] addressValues = new String[][]{{"STRING","Line1",this.address.getLine1()},{"STRING","Line2",this.address.getLine2()},
-                {"STRING","City",this.address.getCity()},{"STRING","PostalCode",this.address.getPostalCode()}};
+
+            String[][] addressValues = new String[][]{{"STRING", "Line1", this.address.getLine1()}, {"STRING", "Line2", this.address.getLine2()},
+            {"STRING", "City", this.address.getCity()}, {"STRING", "PostalCode", this.address.getPostalCode()}};
             int a = dh.performInsert(TableSpecifiers.ADDRESS.getTable(), addressValues);
-            String[][] contactValues = new String[][]{{"STRING","Cell",this.contact.getCell()},{"STRING","Email",this.contact.getEmail()}};
+            String[][] contactValues = new String[][]{{"STRING", "Cell", this.contact.getCell()}, {"STRING", "Email", this.contact.getEmail()}};
             int c = dh.performInsert(TableSpecifiers.CONTACT.getTable(), contactValues);
-            String[][] personValues = new String[][]{{"STRING","IDNumber",this.id},{"STRING","Name",this.name},{"STRING","Surname",this.surname},
-                {"INT","DepIDFK","(SELECT `DepartmentIDPK` FROM `tbldepartment` WHERE `DepName` = '"+this.department.getName()+"')"},
-                {"INT","AddressIDFK","(SELECT `AddressIDPK` FROM `tblAddress` ORDER BY `AddressIDPK` DESC LIMIT 1)"},{"INT","ContactIDFK","(SELECT `ContactIDPK` FROM `tblContact` ORDER BY `ContactIDPK` DESC LIMIT 1)"},
-                {"STRING","Campus",this.campus}};
-            
+            String[][] personValues = new String[][]{{"STRING", "IDNumber", this.id}, {"STRING", "Name", this.name}, {"STRING", "Surname", this.surname},
+            {"INT", "DepIDFK", "(SELECT `DepartmentIDPK` FROM `tbldepartment` WHERE `DepName` = '" + this.department.getName() + "')"},
+            {"INT", "AddressIDFK", "(SELECT `AddressIDPK` FROM `tblAddress` ORDER BY `AddressIDPK` DESC LIMIT 1)"}, {"INT", "ContactIDFK", "(SELECT `ContactIDPK` FROM `tblContact` ORDER BY `ContactIDPK` DESC LIMIT 1)"},
+            {"STRING", "Campus", this.campus}};
+
             int p = dh.performInsert(TableSpecifiers.PERSON.getTable(), personValues);
-            
-            
-            
-            if((p>0)&&(a>0)&&(c>0)){
+
+            if ((p > 0) && (a > 0) && (c > 0)) {
                 return 1;
-            }else{
+            } else {
                 this.delete();
                 return 0;
             }

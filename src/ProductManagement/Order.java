@@ -26,7 +26,10 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Tanya
+ * @author Tanya 
+ * Represents an Order entity that is created whenever a user
+ * request is accepted. This class is used to maintain its status and history in
+ * the database.
  */
 public class Order implements Datahandling, Serializable {
 
@@ -58,12 +61,12 @@ public class Order implements Datahandling, Serializable {
     public Order(User user) {
         this.user = user;
     }
-    
+
     public Order() {
     }
 
     public void setOrderItems(ArrayList<OrderItems> orderItems) {
-        this.orderItems = (orderItems==null)?new ArrayList<OrderItems>():orderItems;
+        this.orderItems = (orderItems == null) ? new ArrayList<OrderItems>() : orderItems;
     }
 
     public Date getReceivedDate() {
@@ -87,7 +90,7 @@ public class Order implements Datahandling, Serializable {
     }
 
     public void setUser(User user) {
-        this.user = (user==null)?new User():user;
+        this.user = (user == null) ? new User() : user;
     }
 
     @Override
@@ -132,6 +135,7 @@ public class Order implements Datahandling, Serializable {
         return true;
     }
 
+    //Selects all orders of all users
     @Override
     public ArrayList<Order> select() {
         ArrayList<Order> orders = new ArrayList<Order>();
@@ -154,6 +158,7 @@ public class Order implements Datahandling, Serializable {
         return orders;
     }
 
+    //Selects all the orders of a specific user
     public ArrayList<Order> selectUserOrders() {
         ArrayList<Order> orders = new ArrayList<Order>();
         Datahandler dh = Datahandler.dataInstance;
@@ -174,8 +179,9 @@ public class Order implements Datahandling, Serializable {
         }
         return orders;
     }
-    
-     public Order selectUserOpenOrder(){
+
+    //Selects an order of a specific user that is still open. A user can only have a single open order at any point in time.
+    public Order selectUserOpenOrder() {
         Order o = null;
         Datahandler dh = Datahandler.dataInstance;
         ResultSet rs;
@@ -195,18 +201,19 @@ public class Order implements Datahandling, Serializable {
         }
         return o;
     }
-    
-    public ArrayList<User> selectUsersWithOpenOrder(){
+
+    //Returns a list of all users that currently have open orders.
+    public ArrayList<User> selectUsersWithOpenOrder() {
         ArrayList<User> users = new ArrayList<User>();
         Datahandler dh = Datahandler.dataInstance;
         ResultSet rs;
         try {
             rs = dh.selectQuerySpec(Datahelper.specificUserWithOpenOrder());
             while (rs.next()) {
-                users.add(new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
-                            new Address(), new Contact(),
-                            new Department(),rs.getString("Campus")),
-                            rs.getString("Username"),decryptPassword(rs.getString("Password")),rs.getString("AccessLevel"),rs.getString("Status")));
+                users.add(new User(new Person(rs.getString("Name"), rs.getString("Surname"), rs.getString("IDNumber"),
+                        new Address(), new Contact(rs.getString("Cell"),rs.getString("Email")),
+                        new Department(), rs.getString("Campus")),
+                        rs.getString("Username"), decryptPassword(rs.getString("Password")), rs.getString("AccessLevel"), rs.getString("Status")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);

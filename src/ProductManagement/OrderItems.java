@@ -17,9 +17,9 @@ import java.util.logging.Logger;
 /**
  *
  * @author Tanya
+ * It is used to represent each individual product and its quantity that forms part of a specific order.
  */
 public class OrderItems implements Serializable{
-    
     private Product product;
     private int qty;
     private Order orderToUpdate;
@@ -37,28 +37,26 @@ public class OrderItems implements Serializable{
         this.qty = qty;
         this.orderToUpdate = orderToUpdate;
     }
-    
-    
+
     public int getQty() {
         return qty;
     }
 
     public void setQty(int qty) {
-        this.qty = (qty<0)?0:qty;
+        this.qty = (qty < 0) ? 0 : qty;
     }
-
 
     public Product getProduct() {
         return product;
     }
 
     public void setProduct(Product product) {
-        this.product = (product==null)?new Product():product;
+        this.product = (product == null) ? new Product() : product;
     }
 
     @Override
     public String toString() {
-        return this.product.getName() +" "+ this.product.getDescription() +" "+ this.qty;
+        return String.format("%S            %S              %d",this.product.getName(),this.product.getDescription(),this.qty);
     }
 
     public String orderItemsToString()
@@ -98,16 +96,16 @@ public class OrderItems implements Serializable{
         }
         return true;
     }
-    
+
     public synchronized int insert() throws SQLException {
         String[][] itemVals = null;
-            itemVals = new String[][]{{"INT", "OrderIDFK", "(SELECT `OrderIDPK` FROM `tblorder` INNER JOIN `tbluser` ON `UserIdFK` = `UserIDPK` WHERE `Username` = '"+this.orderToUpdate.getUser().getUsername()+"' AND `OrderDate`>`ReceivedDate` ORDER BY `OrderIDPK` DESC LIMIT 1)"},
-            {"INT", "ProductIDFK", "(SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '" + this.getProduct().getName() + "')"},
-            {"INT", "ItemQty", Integer.toString(this.qty)}};
-        
+        itemVals = new String[][]{{"INT", "OrderIDFK", "(SELECT `OrderIDPK` FROM `tblorder` INNER JOIN `tbluser` ON `UserIdFK` = `UserIDPK` WHERE `Username` = '" + this.orderToUpdate.getUser().getUsername() + "' AND `OrderDate`>`ReceivedDate` ORDER BY `OrderIDPK` DESC LIMIT 1)"},
+        {"INT", "ProductIDFK", "(SELECT `ProductIDPK` FROM `tblproduct` WHERE `Name` = '" + this.getProduct().getName() + "')"},
+        {"INT", "ItemQty", Integer.toString(this.qty)}};
+
         Datahandler dh = Datahandler.dataInstance;
         return dh.performInsert(TableSpecifiers.ORDER_ITEMS.getTable(), itemVals);
 
-    } 
+    }
 
 }

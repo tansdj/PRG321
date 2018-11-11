@@ -22,10 +22,12 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  *
- * @author Tanya
+ * @author Tanya 
+ * Represents a user object that has to be maintained in the
+ * database. Therefore, a person at BC that has credentials to access the
+ * stationary management system.
  */
-public class User implements Datahandling,Serializable{
-    
+public class User implements Datahandling, Serializable {
     private Person person;
     private String username;
     private String password;
@@ -38,7 +40,7 @@ public class User implements Datahandling,Serializable{
         this.username = username;
         this.password = password;
     }
-    
+
     public User(Person person, String username, String password, String accessLevel, String status) {
         this.person = person;
         this.username = username;
@@ -53,7 +55,7 @@ public class User implements Datahandling,Serializable{
         this.accessLevel = accessLevel;
         this.status = status;
     }
-    
+
     public User() {
     }
 
@@ -62,7 +64,7 @@ public class User implements Datahandling,Serializable{
     }
 
     public void setStatus(String status) {
-        this.status = (status.equals(""))?"N.A":status;
+        this.status = (status.equals("")) ? "N.A" : status;
     }
 
     public String getAccessLevel() {
@@ -70,7 +72,7 @@ public class User implements Datahandling,Serializable{
     }
 
     public void setAccessLevel(String accessLevel) {
-        this.accessLevel = (accessLevel.equals(""))?"N.A":accessLevel;
+        this.accessLevel = (accessLevel.equals("")) ? "N.A" : accessLevel;
     }
 
     public String getPassword() {
@@ -78,7 +80,7 @@ public class User implements Datahandling,Serializable{
     }
 
     public void setPassword(String password) {
-        this.password = (password.equals(""))?"N.A":password;//Add encryption
+        this.password = (password.equals("")) ? "N.A" : password;//Add encryption
     }
 
     public String getUsername() {
@@ -86,7 +88,7 @@ public class User implements Datahandling,Serializable{
     }
 
     public void setUsername(String username) {
-        this.username = (username.equals(""))?"N.A":username;
+        this.username = (username.equals("")) ? "N.A" : username;
     }
 
     public Person getPerson() {
@@ -94,7 +96,7 @@ public class User implements Datahandling,Serializable{
     }
 
     public void setPerson(Person person) {
-        this.person = (person==null)?new Person():person;
+        this.person = (person == null) ? new Person() : person;
     }
 
     @Override
@@ -147,51 +149,52 @@ public class User implements Datahandling,Serializable{
     public ArrayList<User> select() {
         ArrayList<User> users = new ArrayList<User>();
         Datahandler dh = Datahandler.dataInstance;
-        try 
-        {
+        try {
             ResultSet rs = dh.selectQuerySpec(Datahelper.selectUser);
-            while(rs.next()){
-                String decryptedPassword = decryptPassword(rs.getString("Password"));              
-                users.add(new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
-                            new Address(), new Contact(),
-                            new Department(),rs.getString("Campus")),
-                            rs.getString("Username"),decryptedPassword,rs.getString("AccessLevel"),rs.getString("Status")));
+            while (rs.next()) {
+                String decryptedPassword = decryptPassword(rs.getString("Password"));
+                users.add(new User(new Person(rs.getString("Name"), rs.getString("Surname"), rs.getString("IDNumber"),
+                        new Address(), new Contact(),
+                        new Department(), rs.getString("Campus")),
+                        rs.getString("Username"), decryptedPassword, rs.getString("AccessLevel"), rs.getString("Status")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
         return users;
     }
-    
-    public ArrayList<User> selectPending(){
+
+    //Selects users that have not been granted access to the system by an administrator.
+    public ArrayList<User> selectPending() {
         ArrayList<User> users = new ArrayList<User>();
         Datahandler dh = Datahandler.dataInstance;
         try {
             ResultSet rs = dh.selectQuerySpec(Datahelper.pendingUser);
-            while(rs.next()){
-                String decryptedPassword = decryptPassword(rs.getString("Password"));   
-                users.add(new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
-                            new Address(), new Contact(),
-                            new Department(),rs.getString("Campus")),
-                            rs.getString("Username"),decryptedPassword,rs.getString("AccessLevel"),rs.getString("Status")));
+            while (rs.next()) {
+                String decryptedPassword = decryptPassword(rs.getString("Password"));
+                users.add(new User(new Person(rs.getString("Name"), rs.getString("Surname"), rs.getString("IDNumber"),
+                        new Address(), new Contact(),
+                        new Department(), rs.getString("Campus")),
+                        rs.getString("Username"), decryptedPassword, rs.getString("AccessLevel"), rs.getString("Status")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
         return users;
     }
-    
-    public User selectSpecUser(){
+
+    //Returns a complete user object based on its username
+    public User selectSpecUser() {
         User user = new User();
         Datahandler dh = Datahandler.dataInstance;
         try {
             ResultSet rs = dh.selectQuerySpec(Datahelper.specificUser(this.username));
-            while(rs.next()){
-                String decryptedPassword = decryptPassword(rs.getString("Password"));   
-                user = (new User(new Person(rs.getString("Name"),rs.getString("Surname"),rs.getString("IDNumber"),
-                            new Address(), new Contact(),
-                            new Department(),rs.getString("Campus")),
-                            rs.getString("Username"),decryptedPassword,rs.getString("AccessLevel"),rs.getString("Status")));
+            while (rs.next()) {
+                String decryptedPassword = decryptPassword(rs.getString("Password"));
+                user = (new User(new Person(rs.getString("Name"), rs.getString("Surname"), rs.getString("IDNumber"),
+                        new Address(), new Contact(),
+                        new Department(), rs.getString("Campus")),
+                        rs.getString("Username"), decryptedPassword, rs.getString("AccessLevel"), rs.getString("Status")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
@@ -201,12 +204,12 @@ public class User implements Datahandling,Serializable{
 
     @Override
     public synchronized int update() {
-       String encryptedPassword = encryptPassword(this.password);
-       String[][] userVals = new String[][]{{"STRING","Password",encryptedPassword},{"STRING","AccessLevel",this.getAccessLevel()},
-       {"STRING","Status",this.getStatus()}};
-       Datahandler dh = Datahandler.dataInstance;
+        String encryptedPassword = encryptPassword(this.password);
+        String[][] userVals = new String[][]{{"STRING", "Password", encryptedPassword}, {"STRING", "AccessLevel", this.getAccessLevel()},
+        {"STRING", "Status", this.getStatus()}};
+        Datahandler dh = Datahandler.dataInstance;
         try {
-            return dh.performUpdate(TableSpecifiers.USER.getTable(), userVals, "`Username` = '"+this.getUsername()+"'");
+            return dh.performUpdate(TableSpecifiers.USER.getTable(), userVals, "`Username` = '" + this.getUsername() + "'");
         } catch (SQLException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -215,9 +218,9 @@ public class User implements Datahandling,Serializable{
 
     @Override
     public synchronized int delete() {
-       Datahandler dh = Datahandler.dataInstance;
+        Datahandler dh = Datahandler.dataInstance;
         try {
-            return dh.performDelete(TableSpecifiers.USER.getTable(),"`Username` = '"+this.getUsername()+"'");
+            return dh.performDelete(TableSpecifiers.USER.getTable(), "`Username` = '" + this.getUsername() + "'");
         } catch (SQLException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -227,8 +230,8 @@ public class User implements Datahandling,Serializable{
     @Override
     public synchronized int insert() {
         String encryptedPassword = encryptPassword(this.password);
-        String[][] userVals = new String[][]{{"INT","PersonIDFK","(SELECT `PersonIDPK` FROM `tblperson` WHERE `IDNumber` = '"+this.person.getId()+"')"},{"STRING","Username",this.getUsername()},{"STRING","Password",encryptedPassword}
-                ,{"STRING","AccessLevel",this.getAccessLevel()},{"STRING","Status",this.getStatus()}};
+        String[][] userVals = new String[][]{{"INT", "PersonIDFK", "(SELECT `PersonIDPK` FROM `tblperson` WHERE `IDNumber` = '" + this.person.getId() + "')"}, {"STRING", "Username", this.getUsername()}, {"STRING", "Password", encryptedPassword},
+         {"STRING", "AccessLevel", this.getAccessLevel()}, {"STRING", "Status", this.getStatus()}};
         Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performInsert(TableSpecifiers.USER.getTable(), userVals);
@@ -237,55 +240,48 @@ public class User implements Datahandling,Serializable{
         }
         return -1;
     }
-    
-    public int testLogin()
-    {
+
+    //Used to test whether a client has entered valid login credentials.
+    public int testLogin() {
         ArrayList<User> users = new ArrayList<User>();
         users = select();
-        for(User user: users)
-        {
-            if(user.username.equals(this.username)&&(user.password.equals(this.password)))
-            {
-               if(user.status.toLowerCase().equals("pending"))
-               {
-                  return -1;
-               }
-               if(user.status.toLowerCase().equals("disabled"))
-               {
-                  return -1;
-               }
-               return 1;
-            }  
+        for (User user : users) {
+            if (user.username.equals(this.username) && (user.password.equals(this.password))) {
+                if (user.status.toLowerCase().equals("pending")) {
+                    return -1;
+                }
+                if (user.status.toLowerCase().equals("disabled")) {
+                    return -1;
+                }
+                return 1;
+            }
         }
         return 0;
     }
-    
+
     public boolean testForExistingUser() // Check to see if username and password is unique
     {
         boolean userExists = false;
         ArrayList<User> users = new ArrayList<User>();
         users = select();
-        for(User user: users)
-        {
-            if(user.username.equals(this.username)||(user.password.equals(this.password)))
-            {
-               userExists = true;
+        for (User user : users) {
+            if (user.username.equals(this.username) || (user.password.equals(this.password))) {
+                userExists = true;
             }
         }
-        
+
         return userExists;
     }
-    
-    public static String encryptPassword(String plainText)
-    {
-        try 
-        {
+
+    //It is used to scramble the password entered by the user in order to store it safely in the database.
+    public static String encryptPassword(String plainText) {
+        try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
             byte[] encrypted = cipher.doFinal(plainText.getBytes());
-            return Base64.getEncoder().encodeToString(encrypted);  
+            return Base64.getEncoder().encodeToString(encrypted);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -293,10 +289,9 @@ public class User implements Datahandling,Serializable{
         return null;
     }
 
-    public static String decryptPassword(String encryptedText) 
-    {
-        try 
-        {
+    //Used to unscramble user input in order to check whether the correct credentials have been entered.
+    public static String decryptPassword(String encryptedText) {
+        try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");

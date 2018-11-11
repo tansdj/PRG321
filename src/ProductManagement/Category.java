@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author Tanya
+ * Represents the category in which a product is listed.
  */
 public class Category implements Datahandling, Serializable{
     

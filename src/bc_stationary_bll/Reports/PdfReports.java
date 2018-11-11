@@ -7,9 +7,12 @@ package bc_stationary_bll.Reports;
 
 /**
  *
- * @author Tanya
+ * @author Tanya This interface is used to force all report classes to return
+ * the appropriate name and header string for the report in question.
  */
 public interface PdfReports {
+
     public String pdfName();
+
     public String header();
 }

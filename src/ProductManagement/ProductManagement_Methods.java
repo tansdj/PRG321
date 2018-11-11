@@ -7,10 +7,13 @@ package ProductManagement;
 
 /**
  *
- * @author Tanya
+ * @author Tanya 
+ * This enum provides a list of different methods available in
+ * the BLL Classes that can be requested by the client, in order to receive the
+ * appropriate result from the server.
  */
 public enum ProductManagement_Methods {
-    
+
     CAT_SELECT_ALL(26),
     CAT_INSERT(27),
     CAT_DELETE(28),
@@ -46,10 +49,10 @@ public enum ProductManagement_Methods {
     UR_UPDATE_UNPROCESSED(58),
     UR_SELECT_AWAITING_PURCHASE(59),
     UR_UPDATE_AWAITING_PURCHASE(60),
-    UR_SELECT_USERS_WITH_REQ(61);
+    UR_SELECT_USERS_WITH_REQ(61),
+    UR_SELECT_UNPROCESSED(62);
     
     public int methodIdentifier;
-
 
     private ProductManagement_Methods(int methodIdentifier) {
         this.methodIdentifier = methodIdentifier;

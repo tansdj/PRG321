@@ -20,10 +20,12 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Tanya
+ * @author Tanya 
+ * This class represents Product items that is used to maintain
+ * the different available products in the database as well as their variable
+ * details.
  */
-public class Product implements Datahandling, Serializable{
-    
+public class Product implements Datahandling, Serializable{   
     public String name;
     private String description;
     private Category category;
@@ -60,7 +62,7 @@ public class Product implements Datahandling, Serializable{
     }
 
     public void setSalesPrice(double salesPrice) {
-        this.salesPrice = (salesPrice<0)?0:salesPrice;
+        this.salesPrice = (salesPrice < 0) ? 0 : salesPrice;
     }
 
     public double getCostPrice() {
@@ -68,7 +70,7 @@ public class Product implements Datahandling, Serializable{
     }
 
     public void setCostPrice(double costPrice) {
-        this.costPrice = (costPrice<0)?0:costPrice;
+        this.costPrice = (costPrice < 0) ? 0 : costPrice;
     }
 
     public Model getModel() {
@@ -76,7 +78,7 @@ public class Product implements Datahandling, Serializable{
     }
 
     public void setModel(Model model) {
-        this.model = (model==null)?new Model():model;
+        this.model = (model == null) ? new Model() : model;
     }
 
     public String getStatus() {
@@ -84,7 +86,7 @@ public class Product implements Datahandling, Serializable{
     }
 
     public void setStatus(String status) {
-        this.status = (status.equals(""))?"N.A":status;
+        this.status = (status.equals("")) ? "N.A" : status;
     }
 
     public Category getCategory() {
@@ -92,7 +94,7 @@ public class Product implements Datahandling, Serializable{
     }
 
     public void setCategory(Category category) {
-        this.category = (category==null)?new Category():category;
+        this.category = (category == null) ? new Category() : category;
     }
 
     public String getDescription() {
@@ -100,7 +102,7 @@ public class Product implements Datahandling, Serializable{
     }
 
     public void setDescription(String description) {
-        this.description = (description.equals(""))?"N.A":description;
+        this.description = (description.equals("")) ? "N.A" : description;
     }
 
     public String getName() {
@@ -108,12 +110,12 @@ public class Product implements Datahandling, Serializable{
     }
 
     public void setName(String name) {
-        this.name = (name.equals(""))?"N.A":name;
+        this.name = (name.equals("")) ? "N.A" : name;
     }
 
     @Override
     public String toString() {
-        return name; 
+        return name;
     }
 
     @Override
@@ -176,9 +178,9 @@ public class Product implements Datahandling, Serializable{
         ResultSet rs;
         try {
             rs = dh.selectQuerySpec(Datahelper.selectProducts);
-            while(rs.next()){
-                prods.add(new Product(rs.getString("Name"),rs.getString("Description"),new Category(rs.getString("CatDescription")),rs.getString("Status"),
-                        new Model(rs.getString("ModDescription")),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")));
+            while (rs.next()) {
+                prods.add(new Product(rs.getString("Name"), rs.getString("Description"), new Category(rs.getString("CatDescription")), rs.getString("Status"),
+                        new Model(rs.getString("ModDescription")), rs.getDouble("CostPrice"), rs.getDouble("SalesPrice"), rs.getDate("EntryDate")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
@@ -186,30 +188,30 @@ public class Product implements Datahandling, Serializable{
         return prods;
     }
 
-    public Product selectSpecProduct(){
+    public Product selectSpecProduct() {
         Product prod = new Product();
         Datahandler dh = Datahandler.dataInstance;
         ResultSet rs;
         try {
             rs = dh.selectQuerySpec(Datahelper.specificProduct(this.name));
-            while(rs.next()){
-                prod = (new Product(rs.getString("Name"),rs.getString("Description"),new Category(rs.getString("CatDescription")),rs.getString("Status"),
-                        new Model(rs.getString("ModDescription")),rs.getDouble("CostPrice"),rs.getDouble("SalesPrice"),rs.getDate("EntryDate")));
+            while (rs.next()) {
+                prod = (new Product(rs.getString("Name"), rs.getString("Description"), new Category(rs.getString("CatDescription")), rs.getString("Status"),
+                        new Model(rs.getString("ModDescription")), rs.getDouble("CostPrice"), rs.getDouble("SalesPrice"), rs.getDate("EntryDate")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
         return prod;
     }
-    
+
     @Override
     public synchronized int update() {
-        String[][] prodVals = new String[][]{{"STRING","Description",this.description},{"INT","CategoryIDFK"," (SELECT `CategoryIDPK` FROM `tblcategory` WHERE `CatDescription` = '"+this.category.getDescription()+"')"},
-                                            {"STRING","Status",this.status},{"INT","ModelIDFK"," (SELECT `ModelIDPK` FROM `tblmodel` WHERE `ModDescription` = '"+this.model.getDescription()+"')"},
-                                            {"DOUBLE","CostPrice",Double.toString(this.costPrice)},{"DOUBLE","SalesPrice",Double.toString(this.salesPrice)},{"DATE","EntryDate",this.entryDate.toString()}};
+        String[][] prodVals = new String[][]{{"STRING", "Description", this.description}, {"INT", "CategoryIDFK", " (SELECT `CategoryIDPK` FROM `tblcategory` WHERE `CatDescription` = '" + this.category.getDescription() + "')"},
+        {"STRING", "Status", this.status}, {"INT", "ModelIDFK", " (SELECT `ModelIDPK` FROM `tblmodel` WHERE `ModDescription` = '" + this.model.getDescription() + "')"},
+        {"DOUBLE", "CostPrice", Double.toString(this.costPrice)}, {"DOUBLE", "SalesPrice", Double.toString(this.salesPrice)}, {"DATE", "EntryDate", this.entryDate.toString()}};
         Datahandler dh = Datahandler.dataInstance;
         try {
-           return dh.performUpdate(TableSpecifiers.PRODUCT.getTable(), prodVals, "`Name` = '"+this.name+"'");
+            return dh.performUpdate(TableSpecifiers.PRODUCT.getTable(), prodVals, "`Name` = '" + this.name + "'");
         } catch (SQLException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -220,7 +222,7 @@ public class Product implements Datahandling, Serializable{
     public synchronized int delete() {
         Datahandler dh = Datahandler.dataInstance;
         try {
-            return dh.performDelete(TableSpecifiers.PRODUCT.getTable(), "`Name` = '"+this.name+"'");
+            return dh.performDelete(TableSpecifiers.PRODUCT.getTable(), "`Name` = '" + this.name + "'");
         } catch (SQLException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -229,9 +231,9 @@ public class Product implements Datahandling, Serializable{
 
     @Override
     public synchronized int insert() {
-        String[][] prodVals = new String[][]{{"STRING","Name",this.name},{"STRING","Description",this.description},{"INT","CategoryIDFK"," (SELECT `CategoryIDPK` FROM `tblcategory` WHERE `CatDescription` = '"+this.category.getDescription()+"')"},
-                                            {"STRING","Status",this.status},{"INT","ModelIDFK"," (SELECT `ModelIDPK` FROM `tblmodel` WHERE `ModDescription` = '"+this.model.getDescription()+"')"},
-                                            {"DOUBLE","CostPrice",Double.toString(this.costPrice)},{"DOUBLE","SalesPrice",Double.toString(this.salesPrice)},{"DATE","EntryDate",this.entryDate.toString()}};
+        String[][] prodVals = new String[][]{{"STRING", "Name", this.name}, {"STRING", "Description", this.description}, {"INT", "CategoryIDFK", " (SELECT `CategoryIDPK` FROM `tblcategory` WHERE `CatDescription` = '" + this.category.getDescription() + "')"},
+        {"STRING", "Status", this.status}, {"INT", "ModelIDFK", " (SELECT `ModelIDPK` FROM `tblmodel` WHERE `ModDescription` = '" + this.model.getDescription() + "')"},
+        {"DOUBLE", "CostPrice", Double.toString(this.costPrice)}, {"DOUBLE", "SalesPrice", Double.toString(this.salesPrice)}, {"DATE", "EntryDate", this.entryDate.toString()}};
         Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performInsert(TableSpecifiers.PRODUCT.getTable(), prodVals);
