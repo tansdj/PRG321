@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author Tanya
+ * Represents a Stock item that is used to maintain the stock values of different products in the database.
  */
 public class Stock implements Datahandling{
     

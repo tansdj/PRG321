@@ -10,9 +10,14 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Tanya
+ * @author Tanya This is a generic class used for any and all communication
+ * between the server and client. Based on the situation, the appropriate
+ * constructor is called, either a request object that tells the server what is
+ * needed, or a result object, of different types, that is sent to the client in
+ * response to its request.
  */
-public class Communication<T> implements Serializable{
+public class Communication<T> implements Serializable {
+
     public int methodIdentifier;
     public T requestObject;
     public T objectResult;
@@ -40,6 +45,5 @@ public class Communication<T> implements Serializable{
     public Communication(int intResult) {
         this.intResult = intResult;
     }
-    
-    
+
 }

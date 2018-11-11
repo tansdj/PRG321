@@ -12,45 +12,47 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Tanya
- * Implementation example: Collections.sort(books, new genericSort(Book.class.getField("name")));--> referenced field must be public
+ * @author Tanya 
+ * This is a generic class used to sort a list of object based on the Field that is used to instantiate an object
+ * of this class. It uses reflection to determine which type of sorting mechanism should be used.
+ * 
+ * Implementation example: Collections.sort(books, new
+ * genericSort(Book.class.getField("name")));--> referenced field must be public
  */
-public class genericSort <T> implements Comparator<T>{
+public class genericSort<T> implements Comparator<T> {
 
     Field f;
-    
+
     public genericSort(Field f) throws ClassNotFoundException {
         this.f = f;
     }
-    
-    
-    
+
     @Override
     public int compare(T o1, T o2) {
-        
-        if(f.getType().equals(String.class)){
+
+        if (f.getType().equals(String.class)) {
             try {
                 return f.get(o1).toString().toUpperCase().compareTo(f.get(o2).toString().toUpperCase());
             } catch (IllegalArgumentException | IllegalAccessException ex) {
                 Logger.getLogger(genericSort.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else if (f.getType().equals(Integer.TYPE)){
+        } else if (f.getType().equals(Integer.TYPE)) {
             try {
-                if(f.get(o1)==f.get(o2)){
+                if (f.get(o1) == f.get(o2)) {
                     return 0;
-                }else if(Integer.parseInt(f.get(o1).toString())>Integer.parseInt(f.get(o2).toString())){
+                } else if (Integer.parseInt(f.get(o1).toString()) > Integer.parseInt(f.get(o2).toString())) {
                     return -1;
                 }
             } catch (IllegalArgumentException | IllegalAccessException ex) {
                 Logger.getLogger(genericSort.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else if (f.getType().equals(Double.TYPE)){
+        } else if (f.getType().equals(Double.TYPE)) {
             try {
-                if(f.get(o1)==f.get(o2)){
+                if (f.get(o1) == f.get(o2)) {
                     return 0;
-                }else if(Double.parseDouble(f.get(o1).toString())>Double.parseDouble(f.get(o2).toString())){
+                } else if (Double.parseDouble(f.get(o1).toString()) > Double.parseDouble(f.get(o2).toString())) {
                     return 1;
-                }else{
+                } else {
                     return -1;
                 }
             } catch (IllegalArgumentException | IllegalAccessException ex) {
@@ -59,5 +61,5 @@ public class genericSort <T> implements Comparator<T>{
         }
         return 0;
     }
-    
+
 }

@@ -9,7 +9,8 @@ import java.util.HashMap;
 
 /**
  *
- * @author Tanya
+ * @author Tanya The enum below is used to return the table names of specific
+ * entities in the database, when queries are being generated through code.
  */
 public enum TableSpecifiers {
     PERSON("tblperson"),
@@ -26,10 +27,9 @@ public enum TableSpecifiers {
     ORDER("tblorder"),
     ORDER_ITEMS("tblorderitems"),
     MODEL("tblmodel");
-    
-    
+
     private String table;
-    
+
     public String getTable() {
         return table;
     }
@@ -37,8 +37,8 @@ public enum TableSpecifiers {
     public void setTable(String table) {
         this.table = table;
     }
-    
-    TableSpecifiers(String tableName){
+
+    TableSpecifiers(String tableName) {
         this.table = tableName;
     }
 }

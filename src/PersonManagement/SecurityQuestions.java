@@ -17,10 +17,12 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Tanya
+ * @author Tanya 
+ * Represents a security question object that can be chosen by
+ * different users in order to store each's unique answer.
  */
-public class SecurityQuestions implements Datahandling{
-    
+public class SecurityQuestions implements Datahandling {
+
     private String question;
 
     public SecurityQuestions(String question) {
@@ -35,7 +37,7 @@ public class SecurityQuestions implements Datahandling{
     }
 
     public void setQuestion(String question) {
-        this.question = (question.equals(""))?"N.A":question;
+        this.question = (question.equals("")) ? "N.A" : question;
     }
 
     @Override
@@ -74,7 +76,7 @@ public class SecurityQuestions implements Datahandling{
         try {
             Datahandler dh = Datahandler.dataInstance;
             ResultSet rs = dh.selectQuery(TableSpecifiers.SEQURITY_QUESTIONS.getTable());
-            while(rs.next()){
+            while (rs.next()) {
                 questions.add(new SecurityQuestions(rs.getString("Question")));
             }
         } catch (SQLException ex) {
@@ -85,12 +87,12 @@ public class SecurityQuestions implements Datahandling{
 
     @Override
     public synchronized int update() {
-        String[][] questions = new String[][]{{"STRING","Question",this.getQuestion()}};
+        String[][] questions = new String[][]{{"STRING", "Question", this.getQuestion()}};
         Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performUpdate(TableSpecifiers.SEQURITY_QUESTIONS.getTable(), questions,
-                "`QuestionIDPK` = (SELECT `QuestionIDPK` FROM `"+TableSpecifiers.SEQURITY_QUESTIONS.getTable()+
-                "` WHERE `Question` = '"+this.getQuestion()+"')");
+                    "`QuestionIDPK` = (SELECT `QuestionIDPK` FROM `" + TableSpecifiers.SEQURITY_QUESTIONS.getTable()
+                    + "` WHERE `Question` = '" + this.getQuestion() + "')");
         } catch (SQLException ex) {
             Logger.getLogger(SecurityQuestions.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -99,9 +101,9 @@ public class SecurityQuestions implements Datahandling{
 
     @Override
     public synchronized int delete() {
-       Datahandler dh = Datahandler.dataInstance;
+        Datahandler dh = Datahandler.dataInstance;
         try {
-            return dh.performDelete(TableSpecifiers.SEQURITY_QUESTIONS.getTable(), "`Question` = '"+this.getQuestion()+"'");
+            return dh.performDelete(TableSpecifiers.SEQURITY_QUESTIONS.getTable(), "`Question` = '" + this.getQuestion() + "'");
         } catch (SQLException ex) {
             Logger.getLogger(SecurityQuestions.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -110,7 +112,7 @@ public class SecurityQuestions implements Datahandling{
 
     @Override
     public synchronized int insert() {
-        String[][] questions = new String[][]{{"STRING","Question",this.getQuestion()}};
+        String[][] questions = new String[][]{{"STRING", "Question", this.getQuestion()}};
         Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performInsert(TableSpecifiers.SEQURITY_QUESTIONS.getTable(), questions);

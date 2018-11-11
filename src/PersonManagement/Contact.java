@@ -5,17 +5,17 @@
  */
 package PersonManagement;
 
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
 /**
  *
- * @author Tanya
+ * @author Tanya 
+ * Represents the contact details of any person.
  */
-public class Contact implements Serializable{
-    
+public class Contact implements Serializable {
+
     private String cell;
     private String email;
 
@@ -32,16 +32,15 @@ public class Contact implements Serializable{
     }
 
     public void setEmail(String email) {
-        this.email = (email.equals(""))?"N.A":email;
+        this.email = (email.equals("")) ? "N.A" : email;
     }
 
-    
     public String getCell() {
         return cell;
     }
 
     public void setCell(String cell) {
-        this.cell = (cell.equals(""))?"N.A":cell;
+        this.cell = (cell.equals("")) ? "N.A" : cell;
     }
 
     @Override
@@ -77,6 +76,5 @@ public class Contact implements Serializable{
         }
         return true;
     }
-
 
 }

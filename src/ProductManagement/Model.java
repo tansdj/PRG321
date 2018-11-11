@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author Tanya
+ * Represents the model of a product.
  */
 public class Model implements Datahandling{
     
