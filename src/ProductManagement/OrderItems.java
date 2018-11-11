@@ -61,6 +61,15 @@ public class OrderItems implements Serializable{
         return this.product.getName() +" "+ this.product.getDescription() +" "+ this.qty;
     }
 
+    public String orderItemsToString()
+    {
+        String returnString = String.format("%s%10s%55d",
+                product.getName(),
+                product.getDescription(),
+                qty);
+        return returnString;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 7;

@@ -275,6 +275,21 @@ public class UserRequest implements Datahandling, Serializable {
         }
         return products;
     }
+    
+    public ArrayList<User> selectUsersWithReq() {
+        ArrayList<User> uReq = new ArrayList<User>();
+        Datahandler dh = Datahandler.dataInstance;
+        ResultSet rs;
+        try {
+            rs = dh.selectQuerySpec(Datahelper.selectUsersWithReq);
+            while (rs.next()) {
+                uReq.add(new User(new Person(rs.getString("Name"), rs.getString("Surname"), rs.getString("IDNumber")),rs.getString("Username"),rs.getString("Password"),rs.getString("AccessLevel"),rs.getString("Status")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return uReq;
+    }
 
     @Override
     public synchronized int update() {

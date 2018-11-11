@@ -5,6 +5,7 @@
  */
 package bc_stationary_bll.Reports;
 
+import ProductManagement.OrderItems;
 import ProductManagement.Stock;
 import ProductManagement.UserRequest;
 import java.util.ArrayList;
@@ -53,6 +54,13 @@ public class ReportBuilder<T> {
                     PurchaseOrderReport por = new PurchaseOrderReport();
                     report = new Reporting("Purchase Order:",reportStrings,por.pdfName(),por.header());
                 break;
+            case 4: ArrayList<OrderItems> oi_list =  (ArrayList<OrderItems>)reportItems;
+                    for(OrderItems oi:oi_list){
+                        reportStrings.add(oi.orderItemsToString());
+                    }
+                    OrderDeliveryReport odr = new OrderDeliveryReport();
+                    report = new Reporting("Order Items:",reportStrings,odr.pdfName(),odr.header());
+                break;    
         }
         return report;
     }

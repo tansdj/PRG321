@@ -47,6 +47,8 @@ public class Datahelper {
     
     public static String selectRequest = "SELECT * FROM `tbluserrequest` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDPK`";
     
+    public static String selectUsersWithReq = "SELECT * FROM `tbluserrequest` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` INNER JOIN `tblperson` ON `PersonIDPK` = `PersonIDFK` GROUP BY `username`";
+    
     public static String selectUnprocessedRequests = "SELECT * FROM `tbluserrequest` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDPK` WHERE `ReqStatus` = 'Unprocessed'";
     
     public static String selectRequestsAwaitingPurchase = "SELECT * FROM `tbluserrequest` INNER JOIN `tbluser` ON `UserIDFK` = `UserIDPK` INNER JOIN `tblproduct` ON `ProductIDFK` = `ProductIDPK` WHERE `ReqStatus` = 'Awaiting Purchase'";

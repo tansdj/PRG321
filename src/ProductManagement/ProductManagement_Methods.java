@@ -45,7 +45,8 @@ public enum ProductManagement_Methods {
     ORDER_SELECTUSERS_WITH_OPEN_ORDERS(57),
     UR_UPDATE_UNPROCESSED(58),
     UR_SELECT_AWAITING_PURCHASE(59),
-    UR_UPDATE_AWAITING_PURCHASE(60);
+    UR_UPDATE_AWAITING_PURCHASE(60),
+    UR_SELECT_USERS_WITH_REQ(61);
     
     public int methodIdentifier;
 

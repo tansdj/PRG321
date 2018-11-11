@@ -12,7 +12,8 @@ package bc_stationary_bll.Reports;
 public enum ReportMenu {
     STOCK_REPORT(1),
     USER_REQUEST_REPORT(2),
-    PURCHASE_ORDER(3);
+    PURCHASE_ORDER(3),
+    ORDER_DELIVERY_REPORT(4);
     
     public int reportOption;
 
