@@ -5,8 +5,6 @@
  */
 package PersonManagement;
 
-
-
 import bc_stationary_bll.Datahandling;
 import bc_stationary_dll.*;
 
@@ -20,10 +18,11 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Tanya
+ * @author Tanya 
+ * Represents the department in which a person is employed.
  */
-public class Department implements Datahandling,Serializable{
-    
+public class Department implements Datahandling, Serializable {
+
     private String name;
 
     public Department(String name) {
@@ -38,7 +37,7 @@ public class Department implements Datahandling,Serializable{
     }
 
     public void setName(String name) {
-        this.name = (name.equals(""))?"N.A":name;
+        this.name = (name.equals("")) ? "N.A" : name;
     }
 
     @Override
@@ -78,13 +77,13 @@ public class Department implements Datahandling,Serializable{
             Datahandler dh = Datahandler.dataInstance;
             ResultSet rs = dh.selectQuery(TableSpecifiers.DEPARTMENT.getTable());
             try {
-                while(rs.next()){
+                while (rs.next()) {
                     deps.add(new Department(rs.getString("DepName")));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Department.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             return deps;
         } catch (SQLException ex) {
             Logger.getLogger(Department.class.getName()).log(Level.SEVERE, null, ex);
@@ -95,14 +94,14 @@ public class Department implements Datahandling,Serializable{
     @Override
     public int update() {
         return 0;
-        
+
     }
 
     @Override
     public int delete() {
         Datahandler dh = Datahandler.dataInstance;
         try {
-            return dh.performDelete(TableSpecifiers.DEPARTMENT.getTable(), "`DepName` = '"+this.name+"'");
+            return dh.performDelete(TableSpecifiers.DEPARTMENT.getTable(), "`DepName` = '" + this.name + "'");
         } catch (SQLException ex) {
             Logger.getLogger(Department.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -111,7 +110,7 @@ public class Department implements Datahandling,Serializable{
 
     @Override
     public int insert() {
-        String[][] colValues = new String[][]{{"STRING","DepName",this.getName()}};
+        String[][] colValues = new String[][]{{"STRING", "DepName", this.getName()}};
         Datahandler dh = Datahandler.dataInstance;
         try {
             return dh.performInsert(TableSpecifiers.DEPARTMENT.getTable(), colValues);
@@ -121,6 +120,4 @@ public class Department implements Datahandling,Serializable{
         return -1;
     }
 
-
-    
 }

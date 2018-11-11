@@ -5,7 +5,6 @@
  */
 package PersonManagement;
 
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -13,9 +12,10 @@ import java.util.Objects;
 /**
  *
  * @author Tanya
+ * Represents the address details of any person.
  */
-public class Address implements Serializable{
-    
+public class Address implements Serializable {
+
     private String line1;
     private String line2;
     private String city;
@@ -30,13 +30,13 @@ public class Address implements Serializable{
 
     public Address() {
     }
-    
+
     public String getCity() {
         return city;
     }
 
     public void setCity(String city) {
-        this.city = (city.equals(""))?"N.A":city;
+        this.city = (city.equals("")) ? "N.A" : city;
     }
 
     public String getPostalCode() {
@@ -44,7 +44,7 @@ public class Address implements Serializable{
     }
 
     public void setPostalCode(String postalCode) {
-        this.postalCode = (postalCode.equals(""))?"N.A":postalCode;
+        this.postalCode = (postalCode.equals("")) ? "N.A" : postalCode;
     }
 
     public String getLine2() {
@@ -52,7 +52,7 @@ public class Address implements Serializable{
     }
 
     public void setLine2(String line2) {
-        this.line2 = (line2.equals(""))?"N.A":line2;
+        this.line2 = (line2.equals("")) ? "N.A" : line2;
     }
 
     public String getLine1() {
@@ -60,7 +60,7 @@ public class Address implements Serializable{
     }
 
     public void setLine1(String line1) {
-        this.line1 = (line1.equals(""))?"N.A":line1;
+        this.line1 = (line1.equals("")) ? "N.A" : line1;
     }
 
     @Override
@@ -105,9 +105,4 @@ public class Address implements Serializable{
         return true;
     }
 
-    
-    
-    
-
-    
 }

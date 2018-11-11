@@ -22,7 +22,9 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Tanya
+ * @author Tanya This class represents objects that are used to save client
+ * request. Therefore, a client send a request for stationary, if it is
+ * approved, it becomes an order, if not the request will simply be closed.
  */
 public class UserRequest implements Datahandling {
 
@@ -111,9 +113,9 @@ public class UserRequest implements Datahandling {
     public String toString() {
         return String.format("%S    %d  %d  %S  %S  %S\n", product.getName(), quantity, priorityLevel, status, reqDate, completedDate);
     }
-    
-    public String reportToString()
-    {
+
+    //This string format is specifically used to generate reports on client requests.
+    public String reportToString() {
         SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("dd/MM/yy");
         String returnString = String.format("%1s%10s%10d%10s%15s%30s%20s",
                 user.getUsername(),
@@ -125,7 +127,6 @@ public class UserRequest implements Datahandling {
                 simpleDateFormatter.format(completedDate));
         return returnString;
     }
-    
 
     @Override
     public int hashCode() {
@@ -176,7 +177,7 @@ public class UserRequest implements Datahandling {
         return true;
     }
 
-//gdhdh
+    //Selects all user requests.
     @Override
     public ArrayList<UserRequest> select() {
         ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
@@ -194,6 +195,7 @@ public class UserRequest implements Datahandling {
         return uReq;
     }
 
+    //Selects user requests that are unprocessed or backordered.
     public ArrayList<UserRequest> selectUnprocessed_ProductBackOrder() {
         ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
         Datahandler dh = Datahandler.dataInstance;
@@ -209,7 +211,8 @@ public class UserRequest implements Datahandling {
         }
         return uReq;
     }
-    
+
+    //Selects all requests that have been approved, but is awaiting purchase of new stock.
     public ArrayList<UserRequest> selectRequestsAwaitingPurchase() {
         ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
         Datahandler dh = Datahandler.dataInstance;
@@ -226,6 +229,7 @@ public class UserRequest implements Datahandling {
         return uReq;
     }
 
+    //Selects requests of a specific product that is either unprocessed or backordered.
     public ArrayList<UserRequest> selectUnprocessed_Product_BackOrder() {
         ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
         Datahandler dh = Datahandler.dataInstance;
@@ -243,7 +247,8 @@ public class UserRequest implements Datahandling {
         }
         return uReq;
     }
-    
+
+    //Selects the requests of a specific user.
     public ArrayList<UserRequest> selectSpecUserRequest() {
         ArrayList<UserRequest> uReq = new ArrayList<UserRequest>();
         Datahandler dh = Datahandler.dataInstance;
@@ -260,6 +265,7 @@ public class UserRequest implements Datahandling {
         return uReq;
     }
 
+    //Selects all products for which there are pending requests.
     public ArrayList<Product> productsOnRequest() {
         ArrayList<Product> products = new ArrayList<Product>();
         ArrayList<UserRequest> ur = this.selectUnprocessed_ProductBackOrder();
@@ -282,7 +288,8 @@ public class UserRequest implements Datahandling {
         }
         return -1;
     }
-    
+
+    //Selects only unprocessed requests
     public synchronized int updateUnprocessed() {
         String[][] reqVals = new String[][]{{"INT", "Quantity", Integer.toString(this.quantity)}, {"INT", "Priority", Integer.toString(this.priorityLevel)}, {"STRING", "ReqStatus", this.status}, {"DATE", "DateCompleted", this.completedDate.toString()}};
         Datahandler dh = Datahandler.dataInstance;
@@ -294,6 +301,8 @@ public class UserRequest implements Datahandling {
         }
         return -1;
     }
+
+    //Selects only requests that are awaiting purchase
     public synchronized int updateAwaitingPurchase() {
         String[][] reqVals = new String[][]{{"INT", "Quantity", Integer.toString(this.quantity)}, {"INT", "Priority", Integer.toString(this.priorityLevel)}, {"STRING", "ReqStatus", this.status}, {"DATE", "DateCompleted", this.completedDate.toString()}};
         Datahandler dh = Datahandler.dataInstance;

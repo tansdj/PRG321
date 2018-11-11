@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bc_stationary_bll;;
+package bc_stationary_bll;
+
+;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
@@ -24,6 +26,13 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+/**
+ *
+ * @author Tanya This class is used to send an email with or without attachments
+ * to the specified address and the contents sent in.
+ */
+
+
 public class Email {
 
     String recipient;
@@ -31,7 +40,7 @@ public class Email {
     String subject;
     String filepath; //e.g. C:\\Users\\Tanya\\Documents\\NetBeansProjects\\BC_Stationary_BLL\\Test.txt --> use \\
 
-    public Email(String recipient, String msg, String subject,String attachmentPath) {
+    public Email(String recipient, String msg, String subject, String attachmentPath) {
         this.recipient = recipient;
         this.msg = msg;
         this.subject = subject;

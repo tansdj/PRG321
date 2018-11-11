@@ -7,17 +7,17 @@ package bc_stationary_bll.Reports;
 
 /**
  *
- * @author Tanya
+ * @author Tanya This enum is used to indicate which type of report is needed.
  */
 public enum ReportMenu {
     STOCK_REPORT(1),
     USER_REQUEST_REPORT(2),
     PURCHASE_ORDER(3);
-    
+
     public int reportOption;
 
     private ReportMenu(int reportOption) {
         this.reportOption = reportOption;
     }
-    
+
 }

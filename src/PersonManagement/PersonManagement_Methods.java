@@ -7,7 +7,10 @@ package PersonManagement;
 
 /**
  *
- * @author Tanya
+ * @author Tanya 
+ * This enum provides a list of different methods available in the
+ * BLL Classes that can be requested by the client, in order to receive the
+ * appropriate result from the server.
  */
 public enum PersonManagement_Methods {
     DEP_SELECT_ALL(1),
@@ -35,15 +38,11 @@ public enum PersonManagement_Methods {
     USQ_UPDATE(23),
     USQ_DELETE(24),
     USQ_INSERT(25);
-    
-    
+
     public int methodIdentifier;
-    
 
     private PersonManagement_Methods(int methodIdentifier) {
         this.methodIdentifier = methodIdentifier;
     }
-    
-    
 
 }

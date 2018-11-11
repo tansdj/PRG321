@@ -14,18 +14,18 @@ import javafx.util.converter.LocalDateStringConverter;
  *
  * @author Tanya
  */
-public class StockReport implements PdfReports{
+public class StockReport implements PdfReports {
 
     @Override
     public String pdfName() {
         LocalDate ld = LocalDate.now();
         Date d = Date.valueOf(ld);
-        return d.toString()+"_"+"StockReport.pdf";
+        return d.toString() + "_" + "StockReport.pdf";
     }
 
     @Override
     public String header() {
-        return String.format("%S %50S", "Stock Item:","Quantity:");
+        return String.format("%S %50S", "Stock Item:", "Quantity:");
     }
-    
+
 }

@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author Tanya
+ * Used to represent a the security question and it's answer for a specific user.
  */
 public class UserSecurityQuestions implements Datahandling{
     
